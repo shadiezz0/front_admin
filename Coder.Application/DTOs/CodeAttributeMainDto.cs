@@ -19,6 +19,5 @@ namespace Coder.Application.DTOs
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
-        public CodeAttributeTypeDto CodeAttributeType { get; set; }
     }
 }

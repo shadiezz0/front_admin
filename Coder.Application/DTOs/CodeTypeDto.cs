@@ -8,6 +8,7 @@ namespace Coder.Application.DTOs
 {
     public class CodeTypeDto
     {
+        public int Id { get; set; }
         public string CodeTypeCode { get; set; }
         public string NameAr { get; set; }
         public string NameEn { get; set; }
@@ -17,6 +18,6 @@ namespace Coder.Application.DTOs
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? ApprovedAt { get; set; }
-        public string ApprovedBy { get; set; }
+        public string? ApprovedBy { get; set; }
     }
 }

@@ -97,6 +97,8 @@ namespace Coder.Application.Services
                     return ApiResponse<CodeAttributeDetailsDto>.Conflict("Code already exists for this Attribute Main");
 
                 var entity = _mapper.Map<CodeAttributeDetails>(dto);
+                if (entity.ParentDetailId <= 0) entity.ParentDetailId = null;
+
                 var result = await _unitOfWork.CodeAttributeDetails.AddAsync(entity);
                 var resultDto = _mapper.Map<CodeAttributeDetailsDto>(result);
 

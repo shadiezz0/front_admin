@@ -18,7 +18,7 @@ namespace Coder.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string CreatedBy { get; set; }
         public DateTime? ApprovedAt { get; set; }
-        public string ApprovedBy { get; set; }
+        public string? ApprovedBy { get; set; }
 
         // Navigation properties
         public virtual ICollection<CodeTypeSetting> CodeTypeSettings { get; set; } = new List<CodeTypeSetting>();

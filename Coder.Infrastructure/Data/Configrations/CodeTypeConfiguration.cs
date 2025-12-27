@@ -39,7 +39,11 @@ namespace Coder.Infrastructure.Data.Configuration
                 .HasMaxLength(100);
 
             builder.Property(x => x.ApprovedBy)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
+
+            builder.Property(x => x.ApprovedAt)
+                .IsRequired(false);
 
             builder.HasIndex(x => x.CodeTypeCode).IsUnique();
 

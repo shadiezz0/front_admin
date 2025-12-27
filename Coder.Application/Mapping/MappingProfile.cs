@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Coder.Application.DTOs;
 using Coder.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Coder.Application.Mapping
 {
@@ -14,8 +9,9 @@ namespace Coder.Application.Mapping
         public MappingProfile()
         {
             // CodeType Mappings
-            CreateMap<CodeType, CodeTypeDto>().ForMember(dest=>dest.CreatedAt,opt=>opt.MapFrom(src=>DateTime.Now)).
-                ReverseMap();
+            CreateMap<CreateCodeTypeDto, CodeType>();
+            CreateMap<CodeType, CodeTypeDto>();
+
             CreateMap<CreateCodeTypeDto, CodeType>();
             CreateMap<UpdateCodeTypeDto, CodeType>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
@@ -27,31 +23,31 @@ namespace Coder.Application.Mapping
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // CodeAttributeMain Mappings
-            CreateMap<CodeAttributeMain, CodeAttributeMainDto>().ReverseMap();
+            CreateMap<CodeAttributeMain, CodeAttributeMainDto>();
             CreateMap<CreateCodeAttributeMainDto, CodeAttributeMain>();
             CreateMap<UpdateCodeAttributeMainDto, CodeAttributeMain>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // CodeAttributeDetails Mappings
-            CreateMap<CodeAttributeDetails, CodeAttributeDetailsDto>().ReverseMap();
+            CreateMap<CodeAttributeDetails, CodeAttributeDetailsDto>();
             CreateMap<CreateCodeAttributeDetailsDto, CodeAttributeDetails>();
             CreateMap<UpdateCodeAttributeDetailsDto, CodeAttributeDetails>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // CodeTypeSetting Mappings
-            CreateMap<CodeTypeSetting, CodeTypeSettingDto>().ReverseMap();
+            CreateMap<CodeTypeSetting, CodeTypeSettingDto>();
             CreateMap<CreateCodeTypeSettingDto, CodeTypeSetting>();
             CreateMap<UpdateCodeTypeSettingDto, CodeTypeSetting>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // CodeTypeSequence Mappings
-            CreateMap<CodeTypeSequence, CodeTypeSequenceDto>().ReverseMap();
+            CreateMap<CodeTypeSequence, CodeTypeSequenceDto>();
             CreateMap<CreateCodeTypeSequenceDto, CodeTypeSequence>();
             CreateMap<UpdateCodeTypeSequenceDto, CodeTypeSequence>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // Code Mappings
-            CreateMap<Code, CodeDto>().ReverseMap();
+            CreateMap<Code, CodeDto>();
             CreateMap<CreateCodeDto, Code>();
             CreateMap<UpdateCodeDto, Code>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
