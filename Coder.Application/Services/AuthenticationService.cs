@@ -28,7 +28,7 @@ namespace Coder.Application.Services
             try
             {
                 var adminApiUrl = _configuration["AdminstratorAPI:BaseUrl"];
-                var loginEndpoint = $"{adminApiUrl}/api/authentication/login";
+                var loginEndpoint = $"{adminApiUrl}";
 
                 var loginRequest = new
                 {
