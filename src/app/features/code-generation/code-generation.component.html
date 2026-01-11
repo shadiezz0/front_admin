@@ -1,0 +1,131 @@
+<div class="code-generation-container">
+    <div class="header">
+        <h2>Code Generation</h2>
+        <p class="description">Generate your final code based on configurations</p>
+    </div>
+
+    <div class="content">
+        <!-- Generated Code Reveal (shown after generation) -->
+        @if (showCodeReveal) {
+        <div class="code-reveal-card">
+            <div class="celebration-icon">🎉</div>
+            <h3>Code Generated Successfully!</h3>
+            <div class="generated-code-display">
+                <div class="code-label">Your Generated Code:</div>
+                <div class="code-value">
+                    {{ generatedCode }}
+                </div>
+                <button class="btn-copy" (click)="copyToClipboard()">
+                    @if (copiedToClipboard) {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    Copied!
+                    } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                    </svg>
+                    Copy to Clipboard
+                    }
+                </button>
+            </div>
+            <p class="success-message">
+                Your code has been generated and is ready to use!
+            </p>
+        </div>
+        }
+
+        <!-- Generation Form -->
+        <div class="card" [class.hidden]="showCodeReveal">
+            <h3>Code Generation</h3>
+            <p>Fill in the details below to generate your code.</p>
+
+            @if (errorMessage) {
+            <div class="alert alert-error">{{ errorMessage }}</div>
+            }
+
+            <form [formGroup]="generationForm" (ngSubmit)="onGenerate()" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nameAr">Name (Arabic) <span class="required">*</span></label>
+                        <input id="nameAr" type="text" formControlName="nameAr" placeholder="الاسم بالعربية" dir="rtl"
+                            [class.invalid]="nameAr?.invalid && nameAr?.touched" />
+                        @if (nameAr?.invalid && nameAr?.touched) {
+                        <span class="error-text">Arabic name is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nameEn">Name (English) <span class="required">*</span></label>
+                        <input id="nameEn" type="text" formControlName="nameEn" placeholder="English Name"
+                            [class.invalid]="nameEn?.invalid && nameEn?.touched" />
+                        @if (nameEn?.invalid && nameEn?.touched) {
+                        <span class="error-text">English name is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="descriptionAr">Description (Arabic) <span class="required">*</span></label>
+                        <textarea id="descriptionAr" formControlName="descriptionAr" placeholder="الوصف بالعربية"
+                            dir="rtl" rows="4"
+                            [class.invalid]="descriptionAr?.invalid && descriptionAr?.touched"></textarea>
+                        @if (descriptionAr?.invalid && descriptionAr?.touched) {
+                        <span class="error-text">Arabic description is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descriptionEn">Description (English) <span class="required">*</span></label>
+                        <textarea id="descriptionEn" formControlName="descriptionEn" placeholder="English Description"
+                            rows="4" [class.invalid]="descriptionEn?.invalid && descriptionEn?.touched"></textarea>
+                        @if (descriptionEn?.invalid && descriptionEn?.touched) {
+                        <span class="error-text">English description is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="externalSystem">External System <span class="required">*</span></label>
+                        <input id="externalSystem" type="text" formControlName="externalSystem" placeholder="e.g., INVV"
+                            [class.invalid]="externalSystem?.invalid && externalSystem?.touched" />
+                        @if (externalSystem?.invalid && externalSystem?.touched) {
+                        <span class="error-text">External system is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="externalReferenceId">External Reference ID <span class="required">*</span></label>
+                        <input id="externalReferenceId" type="text" formControlName="externalReferenceId"
+                            placeholder="e.g., SRV-CARD-002"
+                            [class.invalid]="externalReferenceId?.invalid && externalReferenceId?.touched" />
+                        @if (externalReferenceId?.invalid && externalReferenceId?.touched) {
+                        <span class="error-text">External reference ID is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-generate" [disabled]="isLoading">
+                        @if (isLoading) {
+                        <span class="spinner"></span>
+                        Generating...
+                        } @else {
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg>
+                        Generate Code
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

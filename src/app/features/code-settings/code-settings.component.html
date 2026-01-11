@@ -1,0 +1,73 @@
+<div class="code-settings-container">
+    <div class="header">
+        <h2>Code Settings</h2>
+        <p class="description">Review and confirm code structure settings</p>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <h3>Settings Configuration</h3>
+            <p>The following settings have been auto-configured based on your details.</p>
+
+            @if (successMessage) {
+            <div class="alert alert-success">{{ successMessage }}</div>
+            }
+
+            @if (errorMessage) {
+            <div class="alert alert-error">{{ errorMessage }}</div>
+            }
+
+            @if (isLoading) {
+            <div class="loading-container">
+                <div class="spinner-large"></div>
+                <p>Creating settings...</p>
+            </div>
+            }
+
+            @if (!isLoading && settings().length > 0) {
+            <div class="settings-display">
+                @for (setting of settings(); track setting.id) {
+                <div class="setting-row">
+                    <div class="setting-field">
+                        <label>Code</label>
+                        <input type="text" [value]="setting.code" readonly class="readonly-input" />
+                    </div>
+                    <div class="setting-field">
+                        <label>Sort Order</label>
+                        <input type="number" [value]="setting.sortOrder" readonly class="readonly-input" />
+                    </div>
+                    <div class="setting-field">
+                        <label>Separator</label>
+                        <input type="text" [value]="setting.separator" readonly class="readonly-input" />
+                    </div>
+                    <div class="setting-field">
+                        <label>Required</label>
+                        <input type="text" [value]="setting.isRequired ? 'Yes' : 'No'" readonly
+                            class="readonly-input" />
+                    </div>
+                </div>
+                }
+            </div>
+
+            <div class="pattern-preview">
+                <h4>Generated Code Pattern</h4>
+                <div class="pattern-display">
+                    {{ generatedPattern() }}
+                </div>
+                <p class="pattern-description">
+                    This is the pattern that will be used for code generation
+                </p>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-primary" (click)="onSave()">
+                    Continue to Sequence
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+            }
+        </div>
+    </div>
+</div>

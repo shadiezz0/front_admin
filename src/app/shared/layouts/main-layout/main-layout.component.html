@@ -1,0 +1,20 @@
+<div class="app-container">
+    <!-- Sidebar -->
+    <app-sidebar [isCollapsed]="isSidebarCollapsed()"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper" [class.sidebar-collapsed]="isSidebarCollapsed()">
+        <!-- Header -->
+        <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+        <!-- Page Content -->
+        <main class="main-content">
+            <div class="content-container">
+                <router-outlet />
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <app-footer></app-footer>
+    </div>
+</div>

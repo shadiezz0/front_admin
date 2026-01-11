@@ -1,0 +1,136 @@
+<div class="code-sequence-container">
+    <div class="header">
+        <h2>Code Sequence</h2>
+        <p class="description">Configure sequence settings for code generation</p>
+    </div>
+
+    <div class="content">
+        <!-- Success Display with Countdown -->
+        @if (sequenceData) {
+        <div class="success-card">
+            <div class="success-icon">✓</div>
+            <h3>Sequence Created Successfully!</h3>
+
+            <div class="sequence-details">
+                <div class="detail-row">
+                    <span class="label">Name:</span>
+                    <span class="value">{{ sequenceData.nameEn }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Start With:</span>
+                    <span class="value">{{ sequenceData.startWith }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Range:</span>
+                    <span class="value">{{ sequenceData.minValue }} - {{ sequenceData.maxValue }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Current Value:</span>
+                    <span class="value">{{ sequenceData.currentValue }}</span>
+                </div>
+            </div>
+
+            <div class="countdown-display">
+                <p>Automatically proceeding to Code Generation in:</p>
+                <div class="countdown-timer">{{ countdown }}</div>
+                <p class="countdown-text">seconds</p>
+                <button class="btn btn-skip" (click)="skipToGeneration()">
+                    Skip & Continue Now
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        }
+
+        <!-- Form -->
+        <div class="card" [class.hidden]="sequenceData">
+            <h3>Sequence Configuration</h3>
+            <p>Define the sequence settings for auto-incrementing codes.</p>
+
+            @if (successMessage && !sequenceData) {
+            <div class="alert alert-success">{{ successMessage }}</div>
+            }
+
+            @if (errorMessage) {
+            <div class="alert alert-error">{{ errorMessage }}</div>
+            }
+
+            <form [formGroup]="sequenceForm" (ngSubmit)="onSubmit()" class="form">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="nameEn">Sequence Name <span class="required">*</span></label>
+                        <input id="nameEn" type="text" formControlName="nameEn" placeholder="e.g., SEQ"
+                            [class.invalid]="nameEn?.invalid && nameEn?.touched" />
+                        @if (nameEn?.invalid && nameEn?.touched) {
+                        <span class="error-text">Sequence name is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startWith">Start With <span class="required">*</span></label>
+                        <input id="startWith" type="number" formControlName="startWith" placeholder="100"
+                            [class.invalid]="startWith?.invalid && startWith?.touched" />
+                        @if (startWith?.invalid && startWith?.touched) {
+                        <span class="error-text">Start value is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="currentValue">Current Value <span class="required">*</span></label>
+                        <input id="currentValue" type="number" formControlName="currentValue" placeholder="100"
+                            [class.invalid]="currentValue?.invalid && currentValue?.touched" />
+                        @if (currentValue?.invalid && currentValue?.touched) {
+                        <span class="error-text">Current value is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minValue">Minimum Value <span class="required">*</span></label>
+                        <input id="minValue" type="number" formControlName="minValue" placeholder="100"
+                            [class.invalid]="minValue?.invalid && minValue?.touched" />
+                        @if (minValue?.invalid && minValue?.touched) {
+                        <span class="error-text">Minimum value is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxValue">Maximum Value <span class="required">*</span></label>
+                        <input id="maxValue" type="number" formControlName="maxValue" placeholder="9999"
+                            [class.invalid]="maxValue?.invalid && maxValue?.touched" />
+                        @if (maxValue?.invalid && maxValue?.touched) {
+                        <span class="error-text">Maximum value is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="isCycling">Cycling <span class="required">*</span></label>
+                        <input id="isCycling" type="number" formControlName="isCycling" placeholder="0"
+                            [class.invalid]="isCycling?.invalid && isCycling?.touched" />
+                        @if (isCycling?.invalid && isCycling?.touched) {
+                        <span class="error-text">Cycling value is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                        @if (isLoading) {
+                        <span class="spinner"></span>
+                        Creating...
+                        } @else {
+                        Create Sequence
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

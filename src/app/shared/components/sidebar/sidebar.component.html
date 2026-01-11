@@ -1,0 +1,95 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="#06b6d4" />
+                    <path d="M12 10 L20 16 L12 22 Z" fill="white" />
+                </svg>
+            </div>
+            @if (!isCollapsed) {
+            <span class="logo-text">nowa</span>
+            }
+        </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="sidebar-nav">
+        <div class="nav-wrapper">
+            @for (section of menuItems(); track section.label) {
+            <div class="nav-section">
+                <!-- Section Header -->
+                @if (!isCollapsed && section.label) {
+                <div class="section-header">{{ section.label }}</div>
+                }
+
+                <!-- Section Items -->
+                @if (section.children) {
+                @for (item of section.children; track item.label) {
+                <div class="nav-item-wrapper">
+                    <!-- Main Item -->
+                    <a [routerLink]="item.route || null" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: item.route === '/' }" class="nav-item"
+                        [class.has-children]="item.children && item.children.length > 0"
+                        (click)="item.children ? toggleMenuItem(item) : null">
+                        <!-- Icon -->
+                        @if (item.icon) {
+                        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path [attr.d]="getIcon(item.icon)"></path>
+                        </svg>
+                        } @else {
+                        <span class="nav-icon-placeholder"></span>
+                        }
+
+                        <!-- Label -->
+                        @if (!isCollapsed) {
+                        <span class="nav-label">{{ item.label }}</span>
+                        }
+
+                        <!-- Badge -->
+                        @if (item.badge && !isCollapsed) {
+                        <span class="nav-badge">{{ item.badge }}</span>
+                        }
+
+                        <!-- Expand Arrow -->
+                        @if (item.children && item.children.length > 0 && !isCollapsed) {
+                        <svg class="nav-arrow" [class.expanded]="item.expanded" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                        }
+                    </a>
+
+                    <!-- Sub Items -->
+                    @if (item.children && item.children.length > 0 && item.expanded && !isCollapsed) {
+                    <div class="sub-menu">
+                        @for (subItem of item.children; track subItem.label) {
+                        <a [routerLink]="subItem.route || null" routerLinkActive="active" class="sub-item">
+                            <span class="sub-item-dot"></span>
+                            <span class="sub-item-label">{{ subItem.label }}</span>
+                        </a>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+                }
+            </div>
+            }
+        </div>
+    </nav>
+
+    <!-- Sidebar Footer (Optional) -->
+    <div class="sidebar-footer">
+        @if (!isCollapsed) {
+        <div class="footer-content">
+            <div class="version-info">
+                <span class="version-label">Version</span>
+                <span class="version-number">1.0.0</span>
+            </div>
+        </div>
+        }
+    </div>
+</aside>

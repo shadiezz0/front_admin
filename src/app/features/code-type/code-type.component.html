@@ -1,0 +1,92 @@
+<div class="code-type-container">
+    <div class="header">
+        <h2>Code Type</h2>
+        <p class="description">Define and manage your code types</p>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <h3>Code Type Configuration</h3>
+            <p>Enter the details for your code type below.</p>
+
+            @if (successMessage) {
+            <div class="alert alert-success">{{ successMessage }}</div>
+            }
+
+            @if (errorMessage) {
+            <div class="alert alert-error">{{ errorMessage }}</div>
+            }
+
+            <form [formGroup]="codeTypeForm" (ngSubmit)="onSubmit()" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="codeTypeCode">Code Type Code <span class="required">*</span></label>
+                        <input id="codeTypeCode" type="text" formControlName="codeTypeCode" placeholder="e.g., HIS"
+                            [class.invalid]="codeTypeCode?.invalid && codeTypeCode?.touched" />
+                        @if (codeTypeCode?.invalid && codeTypeCode?.touched) {
+                        <span class="error-text">
+                            @if (codeTypeCode?.errors?.['required']) {
+                            Code Type Code is required
+                            } @else if (codeTypeCode?.errors?.['minlength']) {
+                            Code must be at least 2 characters
+                            }
+                        </span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nameAr">Name (Arabic) <span class="required">*</span></label>
+                        <input id="nameAr" type="text" formControlName="nameAr" placeholder="الاسم بالعربية" dir="rtl"
+                            [class.invalid]="nameAr?.invalid && nameAr?.touched" />
+                        @if (nameAr?.invalid && nameAr?.touched) {
+                        <span class="error-text">Arabic name is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nameEn">Name (English) <span class="required">*</span></label>
+                        <input id="nameEn" type="text" formControlName="nameEn" placeholder="English Name"
+                            [class.invalid]="nameEn?.invalid && nameEn?.touched" />
+                        @if (nameEn?.invalid && nameEn?.touched) {
+                        <span class="error-text">English name is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="descriptionAr">Description (Arabic) <span class="required">*</span></label>
+                        <textarea id="descriptionAr" formControlName="descriptionAr" placeholder="الوصف بالعربية"
+                            dir="rtl" rows="4"
+                            [class.invalid]="descriptionAr?.invalid && descriptionAr?.touched"></textarea>
+                        @if (descriptionAr?.invalid && descriptionAr?.touched) {
+                        <span class="error-text">Arabic description is required</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descriptionEn">Description (English) <span class="required">*</span></label>
+                        <textarea id="descriptionEn" formControlName="descriptionEn" placeholder="English Description"
+                            rows="4" [class.invalid]="descriptionEn?.invalid && descriptionEn?.touched"></textarea>
+                        @if (descriptionEn?.invalid && descriptionEn?.touched) {
+                        <span class="error-text">English description is required</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                        @if (isLoading) {
+                        <span class="spinner"></span>
+                        Saving...
+                        } @else {
+                        Save & Continue
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

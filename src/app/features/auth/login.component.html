@@ -1,0 +1,56 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Sign in to continue to Code Generator</p>
+
+    @if (errorMessage()) {
+    <div class="error-alert">
+      {{ errorMessage() }}
+    </div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="userCode">User Code</label>
+        <input id="userCode" type="text" formControlName="userCode" placeholder="Enter your user code"
+          [class.invalid]="userCode?.invalid && userCode?.touched" />
+        @if (userCode?.invalid && userCode?.touched) {
+        <span class="error-message">
+          @if (userCode?.errors?.['required']) {
+          User code is required
+          } @else if (userCode?.errors?.['minlength']) {
+          User code must be at least 2 characters
+          }
+        </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Enter your password"
+          [class.invalid]="password?.invalid && password?.touched" />
+        @if (password?.invalid && password?.touched) {
+        <span class="error-message">
+          @if (password?.errors?.['required']) {
+          Password is required
+          } @else if (password?.errors?.['minlength']) {
+          Password must be at least 6 characters
+          }
+        </span>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || isLoading()">
+        @if (isLoading()) {
+        <span class="spinner"></span> Logging in...
+        } @else {
+        Sign In
+        }
+      </button>
+    </form>
+
+    <p class="register-link">
+      Don't have an account? <a routerLink="/auth/register">Sign up</a>
+    </p>
+  </div>
+</div>

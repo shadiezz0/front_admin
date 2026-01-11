@@ -1,0 +1,210 @@
+┌─────────────────────────────────────────────────────────────┐
+│         CODE GENERATOR FE - NEW PROJECT STRUCTURE           │
+└─────────────────────────────────────────────────────────────┘
+
+src/
+├── 📁 environments/
+│   ├── environment.ts           # Dev config (local API)
+│   └── environment.prod.ts      # Prod config (production API)
+│
+├── 📄 index.html                # HTML entry point
+├── 📄 main.ts                   # Angular bootstrap
+├── 📄 styles.css                # Global styles + design tokens
+│
+└── 📁 app/
+    │
+    ├── 📄 app.ts                # Root component class
+    ├── 📄 app.html              # Root template (router-outlet)
+    ├── 📄 app.css               # Root styles
+    ├── 📄 app.config.ts         # App configuration (HTTP, interceptors)
+    ├── 📄 app.routes.ts         # Main routing configuration
+    │
+    ├── 📁 core/                 # 🔷 SINGLETON LAYER
+    │   ├── 📁 constants/
+    │   │   ├── app.constants.ts # API endpoints, storage keys, routes
+    │   │   └── index.ts
+    │   │
+    │   ├── 📁 guards/
+    │   │   ├── auth.guard.ts    # Route protection (authGuard, guestGuard)
+    │   │   └── index.ts
+    │   │
+    │   ├── 📁 interceptors/
+    │   │   ├── auth.interceptor.ts # JWT token injection
+    │   │   └── index.ts
+    │   │
+    │   ├── 📁 models/
+    │   │   ├── auth.model.ts    # User, AuthResponse, LoginCredentials
+    │   │   ├── api.model.ts     # ApiResponse, Pagination, ErrorResponse
+    │   │   └── index.ts
+    │   │
+    │   ├── 📁 services/
+    │   │   ├── auth.service.ts  # Authentication service (Signals + RxJS)
+    │   │   ├── translation.service.ts # i18n service (EN/AR + RTL)
+    │   │   └── index.ts
+    │   │
+    │   └── index.ts             # Core barrel export
+    │
+    ├── 📁 features/             # 🔶 FEATURE LAYER (Lazy-loaded)
+    │   │
+    │   ├── 📁 auth/
+    │   │   ├── login.component.ts    # Login logic
+    │   │   ├── login.component.html  # Login template
+    │   │   └── login.component.css   # Login styles
+    │   │
+    │   ├── 📁 dashboard/
+    │   │   ├── dashboard.component.ts
+    │   │   ├── dashboard.component.html
+    │   │   └── dashboard.component.css
+    │   │
+    │   ├── 📁 landing/
+    │   │   ├── landing.component.ts   # Public landing page
+    │   │   ├── landing.component.html
+    │   │   └── landing.component.css
+    │   │
+    │   └── 📁 settings/
+    │       ├── settings.component.ts
+    │       ├── settings.component.html
+    │       └── settings.component.css
+    │
+    └── 📁 shared/               # 🔷 REUSABLE LAYER
+        ├── 📁 components/
+        │   ├── 📁 button/
+        │   │   └── button.component.ts    # Reusable button
+        │   ├── 📁 card/
+        │   │   └── card.component.ts      # Reusable card
+        │   └── index.ts
+        │
+        ├── 📁 directives/       # (Ready for custom directives)
+        └── 📁 pipes/            # (Ready for custom pipes)
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                    ROUTING STRUCTURE                        │
+└─────────────────────────────────────────────────────────────┘
+
+Route                    Component          Guard            Lazy
+─────────────────────────────────────────────────────────────
+/                        Landing            -                ✅
+/auth/login              Login              guestGuard       ✅
+/dashboard               Dashboard          authGuard        ✅
+/settings                Settings           authGuard        ✅
+/**                      → Redirect to /
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                    ARCHITECTURE FLOW                        │
+└─────────────────────────────────────────────────────────────┘
+
+┌──────────────┐
+│   Browser    │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│  app.ts      │ ◄── Root Component (router-outlet)
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│  Routing     │ ◄── app.routes.ts (lazy loading)
+└──────┬───────┘
+       │
+       ├─────► 🔷 Core Layer
+       │       ├── Services (auth, i18n)
+       │       ├── Guards (protect routes)
+       │       ├── Interceptors (add tokens)
+       │       └── Models (TypeScript types)
+       │
+       ├─────► 🔶 Feature Layer
+       │       ├── Auth (login, register)
+       │       ├── Dashboard
+       │       ├── Landing
+       │       └── Settings
+       │
+       └─────► 🔷 Shared Layer
+               ├── Components (button, card)
+               ├── Directives
+               └── Pipes
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                   DEPENDENCY RULES                          │
+└─────────────────────────────────────────────────────────────┘
+
+✅ Features  → Can import → Core, Shared
+✅ Shared    → Can import → Core
+✅ Core      → Can import → Nothing (only Angular & 3rd party)
+
+❌ Core      → Cannot import → Features, Shared
+❌ Features  → Cannot import → Other Features
+❌ Shared    → Cannot import → Features
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                   KEY TECHNOLOGIES                          │
+└─────────────────────────────────────────────────────────────┘
+
+Framework:       Angular 19.x
+Language:        TypeScript
+State:           Angular Signals + RxJS
+Components:      Standalone (no NgModules)
+Routing:         Lazy Loading
+Auth:            JWT + HTTP Interceptor
+i18n:            Custom service (EN/AR + RTL)
+Styling:         CSS with custom properties
+Build:           ✅ Successful
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                   QUICK START                               │
+└─────────────────────────────────────────────────────────────┘
+
+1. Start Dev Server:
+   ng serve
+   # or
+   npm run dev
+
+2. Build Production:
+   ng build
+
+3. Run Tests:
+   ng test
+
+4. Check Linting:
+   ng lint
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                   FILES CREATED                             │
+└─────────────────────────────────────────────────────────────┘
+
+📁 Environments:              2 files
+📁 Core (constants):          2 files
+📁 Core (guards):             2 files
+📁 Core (interceptors):       2 files
+📁 Core (models):             3 files
+📁 Core (services):           3 files
+📁 Features (auth):           3 files
+📁 Features (dashboard):      3 files
+📁 Features (landing):        3 files
+📁 Features (settings):       3 files
+📁 Shared (components):       3 files
+📁 Documentation:             2 files
+───────────────────────────────────
+Total:                        35+ files
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                   STATUS                                    │
+└─────────────────────────────────────────────────────────────┘
+
+✅ Structure Created
+✅ All Folders Organized
+✅ Core Services Implemented
+✅ Feature Modules Created
+✅ Routing Configured
+✅ Guards & Interceptors Setup
+✅ Build Successful
+✅ Documentation Complete
+
+🎉 PROJECT STRUCTURE COMPLETE AND READY FOR DEVELOPMENT! 🎉

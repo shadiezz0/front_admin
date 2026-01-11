@@ -1,0 +1,65 @@
+<app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+<div class="layout">
+    <aside class="layout-sidebar" [class.collapsed]="isSidebarCollapsed">
+        <app-sidebar [isCollapsed]="isSidebarCollapsed"></app-sidebar>
+    </aside>
+
+    <main class="layout-main">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-illustration">
+                <div class="code-block block-1"></div>
+                <div class="code-block block-2"></div>
+                <div class="code-block block-3"></div>
+                <div class="gear-icon">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M12 1v6m0 6v6m0-18l-2.5 2.5M12 1l2.5 2.5M1 12h6m6 0h6M1 12l2.5-2.5M1 12l2.5 2.5m18.5-2.5l-2.5-2.5m2.5 2.5l-2.5 2.5">
+                        </path>
+                    </svg>
+                </div>
+                <div class="rocket-icon">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z">
+                        </path>
+                        <path
+                            d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z">
+                        </path>
+                        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-header">
+            <h1>Generate Code</h1>
+            <p class="subtitle">Create and manage code steps in sequence</p>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+
+        <div class="cards-grid">
+            <div *ngFor="let name of cardNames; let i = index" class="card" [class.completed]="completed()[i]">
+                <div class="card-title">{{ i + 1 }}. {{ name }}</div>
+                <div class="card-actions">
+                    <button class="btn btn-open" (click)="openCard(i)">Open</button>
+                    <button class="btn btn-complete" (click)="completeCard(i)"
+                        [disabled]="!canAccess(i) || completed()[i]">
+                        {{ completed()[i] ? 'Completed' : 'Complete' }}
+                    </button>
+                </div>
+                <div *ngIf="activeCard === i" class="card-body">
+                    <p>You are working on <strong>{{ name }}</strong>. When finished click Complete.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-wrapper">
+            <app-footer></app-footer>
+        </div>
+    </main>
+</div>
