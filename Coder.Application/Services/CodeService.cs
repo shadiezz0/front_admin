@@ -19,7 +19,6 @@ namespace Coder.Application.Services
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService;
 
-
         public CodeService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
@@ -97,37 +96,175 @@ namespace Coder.Application.Services
             }
         }
 
+        /// <summary>
+        /// Generates code based on CodeTypeSettings (sort order), attribute details, and optional sequence.
+        /// Steps:
+        /// 1. Fetch CodeTypeSettings ordered by SortOrder
+        /// 2. Validate all required settings are configured
+        /// 3. Fetch CodeAttributeDetails values for each setting
+        /// 4. Build code sections in sorted order
+        /// 5. Get separator from first CodeTypeSetting
+        /// 6. Join sections with separator
+        /// 7. Append sequence if configured
+        /// </summary>
+        private async Task<string> GenerateCodeAsync(int codeTypeId)
+        {
+            try
+            {
+                // Step 1: Get CodeTypeSettings ordered by SortOrder (ascending)
+                var codeTypeSettings = await _unitOfWork.CodeTypeSettings.FindAsync(
+                    x => x.CodeTypeId == codeTypeId
+                );
+
+                if (!codeTypeSettings.Any())
+                    throw new Exception($"No CodeTypeSettings configured for CodeType ID: {codeTypeId}");
+
+                // Sort by SortOrder (ascending) - this determines the order of code sections
+                var sortedSettings = codeTypeSettings.OrderBy(x => x.SortOrder).ToList();
+
+                Console.WriteLine($"[CodeService] Found {sortedSettings.Count} CodeTypeSettings for CodeTypeId: {codeTypeId}");
+                foreach (var setting in sortedSettings)
+                {
+                    Console.WriteLine($"  - AttributeDetailId: {setting.AttributeDetailId}, SortOrder: {setting.SortOrder}, Separator: {setting.Separator}, IsRequired: {setting.IsRequired}");
+                }
+
+                // Step 2: Validate all required settings are configured
+                var missingRequiredSettings = sortedSettings.Where(x => x.IsRequired).ToList();
+                if (!missingRequiredSettings.Any())
+                    throw new Exception($"No required CodeTypeSettings found for CodeType ID: {codeTypeId}");
+
+                // Step 3: Build code sections in sorted order by fetching CodeAttributeDetails
+                var codeSections = new List<string>();
+
+                foreach (var setting in sortedSettings)
+                {
+                    // Get the CodeAttributeDetails
+                    var attributeDetail = await _unitOfWork.CodeAttributeDetails.GetByIdAsync(setting.AttributeDetailId);
+
+                    if (attributeDetail == null)
+                        throw new Exception($"CodeAttributeDetail not found for AttributeDetailId: {setting.AttributeDetailId}");
+
+                    // Use the Code value from CodeAttributeDetails
+                    var sectionValue = attributeDetail.Code;
+
+                    if (string.IsNullOrWhiteSpace(sectionValue))
+                        throw new Exception($"Code value cannot be empty for AttributeDetailId: {setting.AttributeDetailId}");
+
+                    codeSections.Add(sectionValue.Trim());
+                    Console.WriteLine($"[CodeService] Added section - AttributeDetailId: {setting.AttributeDetailId}, Code: {sectionValue.Trim()}, SortOrder: {setting.SortOrder}");
+                }
+
+                // Step 4: Get separator from first setting (all settings of same CodeType should share the same separator)
+                var separator = sortedSettings.FirstOrDefault()?.Separator ?? "-";
+                Console.WriteLine($"[CodeService] Using separator: '{separator}'");
+
+                // Step 5: Join sections with separator (base code without sequence)
+                var baseCode = string.Join(separator, codeSections);
+                Console.WriteLine($"[CodeService] Base code generated: {baseCode}");
+
+                // Step 6: ⭐ APPEND SEQUENCE if configured
+                var sequence = await _unitOfWork.CodeTypeSequences
+                    .FirstOrDefaultAsync(x => x.CodeTypeId == codeTypeId);
+
+                if (sequence != null)
+                {
+                    Console.WriteLine($"[CodeService] Sequence found - CurrentValue: {sequence.CurrentValue}, MinValue: {sequence.MinValue}, MaxValue: {sequence.MaxValue}, IsCycling: {sequence.IsCycling}");
+
+                    var nextValue = sequence.CurrentValue + 1;
+
+                    // Handle cycling
+                    if (nextValue > sequence.MaxValue)
+                    {
+                        if (sequence.IsCycling > 0)
+                        {
+                            nextValue = sequence.MinValue + sequence.StartWith;
+                            Console.WriteLine($"[CodeService] Sequence cycled - NextValue reset to: {nextValue}");
+                        }
+                        else
+                        {
+                            throw new Exception(
+                                $"Sequence has reached maximum value ({sequence.MaxValue}). Enable cycling to continue.");
+                        }
+                    }
+
+                    // Format sequence value with leading zeros based on IsCycling (total width)
+                    string nextValueStr = nextValue.ToString();
+                    int zerosCount = sequence.IsCycling - nextValueStr.Length;
+                    if (zerosCount < 0)
+                        zerosCount = 0;
+
+                    string formattedSequence = new string('0', zerosCount) + nextValueStr;
+
+                    // Append sequence with separator
+                    var finalCode = $"{baseCode}{separator}{formattedSequence}";
+
+                    // Update sequence current value
+                    sequence.CurrentValue = nextValue;
+                    await _unitOfWork.CodeTypeSequences.UpdateAsync(sequence);
+
+                    Console.WriteLine($"[CodeService] Final code with sequence: {finalCode} (SequenceValue: {formattedSequence}, NextCurrentValue: {nextValue})");
+                    return finalCode;
+                }
+                else
+                {
+                    Console.WriteLine($"[CodeService] No sequence configured - returning base code: {baseCode}");
+                    return baseCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[CodeService] Error in GenerateCodeAsync: {ex.Message}");
+                throw new Exception($"Error generating code: {ex.Message}");
+            }
+        }
+
         public async Task<ApiResponse<CodeDto>> CreateAsync(CreateCodeDto dto)
         {
             try
             {
+                // Step 1: Validate CodeType exists
                 var codeType = await _unitOfWork.CodeTypes.GetByIdAsync(dto.CodeTypeId);
                 if (codeType == null)
                     return ApiResponse<CodeDto>.BadRequest("Code Type does not exist");
 
+                // Step 2: AUTO-GENERATE code with sequence using private method
+                string generatedCode;
+                try
+                {
+                    generatedCode = await GenerateCodeAsync(dto.CodeTypeId);
+                }
+                catch (Exception ex)
+                {
+                    return ApiResponse<CodeDto>.BadRequest($"Failed to generate code: {ex.Message}");
+                }
+
+                // Step 3: Check if code already exists
                 var exists = await _unitOfWork.Codes.AnyAsync(x =>
-                    x.CodeTypeId == dto.CodeTypeId && x.CodeGenerated == dto.CodeGenerated);
+                    x.CodeTypeId == dto.CodeTypeId && x.CodeGenerated == generatedCode);
                 if (exists)
-                    return ApiResponse<CodeDto>.Conflict("Code already exists");
+                    return ApiResponse<CodeDto>.Conflict($"Code '{generatedCode}' already exists for this Code Type");
 
+                // Step 4: Map DTO to entity and set generated code
                 var entity = _mapper.Map<Code>(dto);
-
-                // Set CreatedBy from current user
+                entity.CodeGenerated = generatedCode;
                 entity.CreatedBy = _currentUserService.GetUserName();
                 entity.Status = "DRAFT";
                 entity.CreatedAt = DateTime.Now;
 
+                // Step 5: Save to database
                 var result = await _unitOfWork.Codes.AddAsync(entity);
                 var resultDto = _mapper.Map<CodeDto>(result);
+
                 return ApiResponse<CodeDto>.Created(
                     resultDto,
-                    $"Code created successfully with CodeGenerated: {entity.CodeGenerated}");
+                    $"Code created successfully. Generated code: {generatedCode}");
             }
             catch (Exception ex)
             {
                 return ApiResponse<CodeDto>.InternalServerError(ex.Message);
             }
         }
+
         public async Task<ApiResponse<CodeDto>> UpdateAsync(int id, UpdateCodeDto dto)
         {
             try
@@ -196,6 +333,7 @@ namespace Coder.Application.Services
                 return ApiResponse<CodeDto>.InternalServerError(ex.Message);
             }
         }
+
         public async Task<ApiResponse<CodeDto>> RejectAsync(int id)
         {
             try

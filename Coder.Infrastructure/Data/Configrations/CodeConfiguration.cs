@@ -13,6 +13,7 @@ namespace Coder.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Code> builder)
         {
+
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.NameAr)
@@ -28,10 +29,10 @@ namespace Coder.Infrastructure.Data.Configuration
                 .HasMaxLength(500);
 
             builder.Property(x => x.CodeGenerated)
-                .IsRequired()
                 .HasMaxLength(200);
 
             builder.Property(x => x.Status)
+                .IsRequired()
                 .HasMaxLength(30)
                 .HasDefaultValue("DRAFT");
 
@@ -41,24 +42,34 @@ namespace Coder.Infrastructure.Data.Configuration
             builder.Property(x => x.ExternalReferenceId)
                 .HasMaxLength(100);
 
-            builder.Property(x => x.CreatedAt)
-                .HasDefaultValueSql("GETDATE()");
-
             builder.Property(x => x.CreatedBy)
                 .HasMaxLength(100);
 
             builder.Property(x => x.ApprovedBy)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
+
+            builder.Property(x => x.ApprovedAt)
+                .HasColumnType("datetime2")
+                .IsRequired(false);
+
+            builder.Property(x => x.CreatedAt)
+                .HasDefaultValueSql("GETDATE()")
+                .HasColumnType("datetime2");
 
             builder.HasOne(x => x.CodeType)
                 .WithMany(x => x.Codes)
                 .HasForeignKey(x => x.CodeTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(x => new { x.CodeTypeId, x.CodeGenerated }).IsUnique();
+            builder.HasIndex(x => new { x.CodeTypeId, x.CodeGenerated })
+                .IsUnique();
+
+            builder.HasIndex(x => x.Status);
+
+            builder.HasIndex(x => x.CodeGenerated);
 
             builder.ToTable("Code");
         }
     }
 }
-

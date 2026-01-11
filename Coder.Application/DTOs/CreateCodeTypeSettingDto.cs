@@ -8,7 +8,7 @@ namespace Coder.Application.DTOs
 {
     public class CreateCodeTypeSettingDto
     {
-        public int CodeTypeId { get; set; }
+        public int CodeTypeId { get; set; } 
         public int AttributeDetailId { get; set; }
         public int SortOrder { get; set; }
         public string Separator { get; set; } = "-";

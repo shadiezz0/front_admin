@@ -47,10 +47,27 @@ namespace Coder.Application.Mapping
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // Code Mappings
-            CreateMap<Code, CodeDto>();
-            CreateMap<CreateCodeDto, Code>();
+            CreateMap<Code, CodeDto>().ReverseMap();
+
+            CreateMap<CreateCodeDto, Code>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "DRAFT"))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CodeGenerated, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.ApprovedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.ApprovedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.CodeType, opt => opt.Ignore());
+
             CreateMap<UpdateCodeDto, Code>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CodeTypeId, opt => opt.Ignore())
+                .ForMember(dest => dest.CodeGenerated, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.ApprovedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.ApprovedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.CodeType, opt => opt.Ignore());
         }
     }
 }

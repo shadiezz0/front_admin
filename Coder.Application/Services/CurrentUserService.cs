@@ -13,9 +13,10 @@ namespace Coder.Application.Services
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private static string _currentUserId;
-        private static string _currentUserName;
-        private static string _currentToken;
+
+        private static string _currentUserId = "System";
+        private static string _currentUserName = "System";
+        private static string _currentToken = "";
 
         public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
@@ -24,38 +25,65 @@ namespace Coder.Application.Services
 
         public string GetUserId()
         {
-            // Try to get from claims first
-            var claim = _httpContextAccessor?.HttpContext?.User?.FindFirst("UserId");
-            if (!string.IsNullOrEmpty(claim?.Value))
-                return claim.Value;
+            try
+            {
+                var claim = _httpContextAccessor?.HttpContext?.User?.FindFirst("UserId");
+                if (!string.IsNullOrEmpty(claim?.Value))
+                    return claim.Value;
 
-            // Fall back to stored value
-            return _currentUserId;
+                var userCodeClaim = _httpContextAccessor?.HttpContext?.User?.FindFirst("UserCode");
+                if (!string.IsNullOrEmpty(userCodeClaim?.Value))
+                    return userCodeClaim.Value;
+
+                return !string.IsNullOrEmpty(_currentUserId) ? _currentUserId : "System";
+            }
+            catch
+            {
+                return !string.IsNullOrEmpty(_currentUserId) ? _currentUserId : "System";
+            }
         }
 
         public string GetUserName()
         {
-            var claim = _httpContextAccessor?.HttpContext?.User?.FindFirst("UserCode");
-            if (!string.IsNullOrEmpty(claim?.Value))
-                return claim.Value;
+            try
+            {
+                var claim = _httpContextAccessor?.HttpContext?.User?.FindFirst("UserCode");
+                if (!string.IsNullOrEmpty(claim?.Value))
+                    return claim.Value;
 
-            return _currentUserName;
+                var employeeNameClaim = _httpContextAccessor?.HttpContext?.User?.FindFirst("EmployeeName");
+                if (!string.IsNullOrEmpty(employeeNameClaim?.Value))
+                    return employeeNameClaim.Value;
+
+                return !string.IsNullOrEmpty(_currentUserName) ? _currentUserName : "System";
+            }
+            catch
+            {
+                return !string.IsNullOrEmpty(_currentUserName) ? _currentUserName : "System";
+            }
         }
 
         public string GetToken()
         {
-            var authHeader = _httpContextAccessor?.HttpContext?.Request?.Headers["Authorization"].ToString();
-            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
-                return authHeader.Substring("Bearer ".Length).Trim();
+            try
+            {
+                var authHeader = _httpContextAccessor?.HttpContext?.Request?.Headers["Authorization"].ToString();
+                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                    return authHeader.Substring("Bearer ".Length).Trim();
 
-            return _currentToken;
+                return !string.IsNullOrEmpty(_currentToken) ? _currentToken : "";
+            }
+            catch
+            {
+                return !string.IsNullOrEmpty(_currentToken) ? _currentToken : "";
+            }
         }
 
         public void SetUserContext(AuthTokenResponse authResponse)
         {
-            _currentUserId = authResponse.UserCode;
-            _currentUserName = authResponse.EmployeeName;
-            _currentToken = authResponse.Token;
+            _currentUserId = authResponse.UserCode ?? "System"; 
+            _currentUserName = authResponse.EmployeeName ?? authResponse.UserCode ?? "System";
+            _currentToken = authResponse.Token ?? "";
         }
     }
 }

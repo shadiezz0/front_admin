@@ -53,7 +53,6 @@ namespace Coder.API.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("current-user")]
         public IActionResult GetCurrentUser()
         {

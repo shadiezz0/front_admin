@@ -159,7 +159,7 @@ namespace Coder.Application.Services
                     return ApiResponse<CodeTypeSettingDto>.NotFound("Code Type not found");
 
                 var result = await _unitOfWork.CodeTypeSettings.DeleteRangeAsync(x => x.CodeTypeId == codeTypeId);
-                if (!result)
+                if (!result) 
                     return ApiResponse<CodeTypeSettingDto>.NotFound("No settings found to delete");
 
                 return ApiResponse<CodeTypeSettingDto>.Success(null,"Code Type Settings deleted successfully");
