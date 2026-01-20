@@ -23,34 +23,6 @@ export class SidebarComponent {
 
     menuItems = signal<MenuItem[]>([
         {
-            label: 'MAIN',
-            icon: '',
-            children: [
-                { label: 'Setting', icon: 'settings', route: '/settings' }
-            ]
-        },
-        {
-            label: '',
-            icon: '',
-            children: [
-                {
-                    label: 'Policies',
-                    icon: 'file-text',
-                    expanded: false,
-                    children: [
-                        { label: 'Policy Categories', icon: '', route: '/policy-categories' },
-                        { label: 'Add Policy Category', icon: '', route: '/add-policy-category' },
-                        { label: 'Policies', icon: '', route: '/policies' },
-                        { label: 'My Policy', icon: '', route: '/my-policy' }
-                    ]
-                },
-                { label: 'OVR', icon: 'layers', route: '/ovr' },
-                { label: 'Maintenance', icon: 'tool', route: '/maintenance' },
-                { label: 'Contracts', icon: 'file', route: '/contracts' },
-                { label: 'CMS', icon: 'box', route: '/cms' }
-            ]
-        },
-        {
             label: 'CODE GENERATOR',
             icon: '',
             children: [

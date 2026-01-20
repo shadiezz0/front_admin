@@ -8,13 +8,8 @@
         <div class="card">
             <h3>Add New Detail Entry</h3>
 
-            @if (successMessage) {
-            <div class="alert alert-success">{{ successMessage }}</div>
-            }
-
-            @if (errorMessage) {
-            <div class="alert alert-error">{{ errorMessage }}</div>
-            }
+            <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
+            <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
 
             <form [formGroup]="detailForm" (ngSubmit)="onSubmit()" class="form">
                 <div class="form-row">

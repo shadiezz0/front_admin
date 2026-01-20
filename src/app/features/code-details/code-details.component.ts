@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { CodeAttributeDetailService } from '../../core/services/code-attribute-detail.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @Component({
     selector: 'app-code-details',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, AlertComponent],
     templateUrl: './code-details.component.html',
     styleUrl: './code-details.component.css'
 })

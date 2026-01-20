@@ -32,17 +32,15 @@
     <p class="subtitle">Create and manage code steps in sequence</p>
 </div>
 
-<div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
-
+<app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
 <div class="cards-grid">
     <div *ngFor="let name of cardNames; let i = index" class="card" [class.completed]="completed()[i]">
         <div class="card-title">{{ i + 1 }}. {{ name }}</div>
         <div class="card-actions">
-            <button class="btn btn-open" (click)="openCard(i)">Open</button>
-            <button class="btn btn-complete" (click)="completeCard(i)"
-                [disabled]="!canAccess(i) || completed()[i]">
+            <app-button class="btn-open" (click)="openCard(i)">Open</app-button>
+            <app-button class="btn-complete" (click)="completeCard(i)" [disabled]="!canAccess(i) || completed()[i]">
                 {{ completed()[i] ? 'Completed' : 'Complete' }}
-            </button>
+            </app-button>
         </div>
         <div *ngIf="activeCard === i" class="card-body">
             <p>You are working on <strong>{{ name }}</strong>. When finished click Complete.</p>

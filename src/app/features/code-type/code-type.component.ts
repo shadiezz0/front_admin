@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { CodeTypeService } from '../../core/services/code-type.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @Component({
     selector: 'app-code-type',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, AlertComponent],
     templateUrl: './code-type.component.html',
     styleUrl: './code-type.component.css'
 })

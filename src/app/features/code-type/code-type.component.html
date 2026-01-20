@@ -9,13 +9,8 @@
             <h3>Code Type Configuration</h3>
             <p>Enter the details for your code type below.</p>
 
-            @if (successMessage) {
-            <div class="alert alert-success">{{ successMessage }}</div>
-            }
-
-            @if (errorMessage) {
-            <div class="alert alert-error">{{ errorMessage }}</div>
-            }
+            <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
+            <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
 
             <form [formGroup]="codeTypeForm" (ngSubmit)="onSubmit()" class="form">
                 <div class="form-row">

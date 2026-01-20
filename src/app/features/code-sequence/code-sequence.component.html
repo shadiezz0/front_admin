@@ -49,13 +49,8 @@
             <h3>Sequence Configuration</h3>
             <p>Define the sequence settings for auto-incrementing codes.</p>
 
-            @if (successMessage && !sequenceData) {
-            <div class="alert alert-success">{{ successMessage }}</div>
-            }
-
-            @if (errorMessage) {
-            <div class="alert alert-error">{{ errorMessage }}</div>
-            }
+            <app-alert *ngIf="successMessage && !sequenceData" type="success" [message]="successMessage"></app-alert>
+            <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
 
             <form [formGroup]="sequenceForm" (ngSubmit)="onSubmit()" class="form">
                 <div class="form-row">

@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { CodeTypeSequenceService } from '../../core/services/code-type-sequence.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @Component({
     selector: 'app-code-sequence',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, AlertComponent],
     templateUrl: './code-sequence.component.html',
     styleUrl: './code-sequence.component.css'
 })

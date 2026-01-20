@@ -9,13 +9,8 @@
             <h3>Settings Configuration</h3>
             <p>The following settings have been auto-configured based on your details.</p>
 
-            @if (successMessage) {
-            <div class="alert alert-success">{{ successMessage }}</div>
-            }
-
-            @if (errorMessage) {
-            <div class="alert alert-error">{{ errorMessage }}</div>
-            }
+            <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
+            <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
 
             @if (isLoading) {
             <div class="loading-container">
