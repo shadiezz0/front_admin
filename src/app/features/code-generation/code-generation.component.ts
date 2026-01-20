@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CodeGenerationService } from '../../core/services/code-generation.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-code-generation',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent, SidebarComponent, FooterComponent],
     templateUrl: './code-generation.component.html',
     styleUrl: './code-generation.component.css'
 })
@@ -21,6 +24,8 @@ export class CodeGenerationComponent implements OnInit {
     copiedToClipboard = false;
 
     codeTypeId!: number;
+
+    isSidebarCollapsed = false;
 
     constructor(
         private fb: FormBuilder,
@@ -92,6 +97,10 @@ export class CodeGenerationComponent implements OnInit {
                 this.copiedToClipboard = false;
             }, 2000);
         });
+    }
+
+    toggleSidebar(): void {
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
     }
 
     get nameAr() { return this.generationForm.get('nameAr'); }

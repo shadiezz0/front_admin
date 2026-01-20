@@ -29,10 +29,13 @@
                 @for (item of section.children; track item.label) {
                 <div class="nav-item-wrapper">
                     <!-- Main Item -->
-                    <a [routerLink]="item.route || null" routerLinkActive="active"
-                        [routerLinkActiveOptions]="{ exact: item.route === '/' }" class="nav-item"
+                    <a [routerLink]="item.route && !item.children ? item.route : null" 
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: false }" 
+                        class="nav-item"
                         [class.has-children]="item.children && item.children.length > 0"
-                        (click)="item.children ? toggleMenuItem(item) : null">
+                        (click)="item.children ? toggleMenuItem(item) : null"
+                        [style.cursor]="item.children ? 'pointer' : 'default'">
                         <!-- Icon -->
                         @if (item.icon) {
                         <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"

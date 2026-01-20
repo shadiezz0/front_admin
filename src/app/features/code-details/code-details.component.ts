@@ -4,11 +4,14 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { CodeAttributeDetailService } from '../../core/services/code-attribute-detail.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-code-details',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent, SidebarComponent, FooterComponent],
     templateUrl: './code-details.component.html',
     styleUrl: './code-details.component.css'
 })
@@ -23,6 +26,8 @@ export class CodeDetailsComponent implements OnInit {
     savedCodes: string[] = [];
 
     attributeMainIds: number[] = [];
+
+    isSidebarCollapsed = false;
 
     constructor(
         private fb: FormBuilder,
@@ -144,6 +149,10 @@ export class CodeDetailsComponent implements OnInit {
                 }
             });
         });
+    }
+
+    toggleSidebar(): void {
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
     }
 
     get code() { return this.detailForm.get('code'); }

@@ -2,21 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { CodeTypeService } from '../../core/services/code-type.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
 
 @Component({
     selector: 'app-code-type',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent, SidebarComponent, FooterComponent],
     templateUrl: './code-type.component.html',
     styleUrl: './code-type.component.css'
 })
 export class CodeTypeComponent implements OnInit {
+    isSidebarCollapsed = false;
     codeTypeForm!: FormGroup;
     isLoading = false;
     errorMessage = '';
     successMessage = '';
+
+    toggleSidebar(): void {
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    }
 
     constructor(
         private fb: FormBuilder,

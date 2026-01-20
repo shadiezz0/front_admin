@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { CodeTypeSettingService } from '../../core/services/code-type-setting.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
 import { forkJoin } from 'rxjs';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 
 interface SettingDisplay {
     id?: number;
@@ -16,7 +19,7 @@ interface SettingDisplay {
 @Component({
     selector: 'app-code-settings',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, HeaderComponent, SidebarComponent, FooterComponent],
     templateUrl: './code-settings.component.html',
     styleUrl: './code-settings.component.css'
 })
@@ -31,6 +34,8 @@ export class CodeSettingsComponent implements OnInit {
     codeTypeId!: number;
     detailIds: number[] = [];
     savedCodes: string[] = [];
+
+    isSidebarCollapsed = false;
 
     constructor(
         private codeTypeSettingService: CodeTypeSettingService,
@@ -116,5 +121,9 @@ export class CodeSettingsComponent implements OnInit {
     onSave() {
         this.codeGeneratorService.completeStep(4);
         this.router.navigate(['/code-sequence']);
+    }
+
+    toggleSidebar(): void {
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
     }
 }

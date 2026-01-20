@@ -4,11 +4,14 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { CodeTypeSequenceService } from '../../core/services/code-type-sequence.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-code-sequence',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent, SidebarComponent, FooterComponent],
     templateUrl: './code-sequence.component.html',
     styleUrl: './code-sequence.component.css'
 })
@@ -23,6 +26,8 @@ export class CodeSequenceComponent implements OnInit {
     countdownInterval: any;
 
     codeTypeId!: number;
+
+    isSidebarCollapsed = false;
 
     constructor(
         private fb: FormBuilder,
@@ -108,6 +113,10 @@ export class CodeSequenceComponent implements OnInit {
         if (this.countdownInterval) {
             clearInterval(this.countdownInterval);
         }
+    }
+
+    toggleSidebar(): void {
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
     }
 
     get nameEn() { return this.sequenceForm.get('nameEn'); }

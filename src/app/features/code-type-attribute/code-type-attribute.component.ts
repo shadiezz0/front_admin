@@ -2,21 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { CodeAttributeTypeService } from '../../core/services/code-attribute-type.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
 
 @Component({
     selector: 'app-code-type-attribute',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent, SidebarComponent, FooterComponent],
     templateUrl: './code-type-attribute.component.html',
     styleUrl: './code-type-attribute.component.css'
 })
 export class CodeTypeAttributeComponent implements OnInit {
+    isSidebarCollapsed = false;
     attributeForm!: FormGroup;
     isLoading = false;
     errorMessage = '';
     successMessage = '';
+
+    toggleSidebar(): void {
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    }
 
     attributes: any[] = [];
     savedIds: number[] = [];
