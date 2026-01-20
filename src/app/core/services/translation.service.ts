@@ -39,8 +39,8 @@ export class TranslationService {
      * Initialize language from storage or default
      */
     private initializeLanguage(): void {
-        const savedLanguage = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
-        const browserLanguage = navigator.language.split('-')[0];
+        const savedLanguage = typeof window !== 'undefined' && window.localStorage ? window.localStorage.getItem(STORAGE_KEYS.LANGUAGE) : null;
+        const browserLanguage = typeof window !== 'undefined' && window.navigator ? navigator.language.split('-')[0] : environment.defaultLanguage;
 
         const languageToUse = savedLanguage ||
             (this.availableLanguages.includes(browserLanguage)
@@ -56,7 +56,9 @@ export class TranslationService {
     setLanguage(language: string): void {
         if (this.availableLanguages.includes(language)) {
             this.currentLanguage.set(language);
-            localStorage.setItem(STORAGE_KEYS.LANGUAGE, language);
+            if (typeof window !== 'undefined' && window.localStorage) {
+                window.localStorage.setItem(STORAGE_KEYS.LANGUAGE, language);
+            }
             this.updateDocumentDirection(language);
         }
     }
