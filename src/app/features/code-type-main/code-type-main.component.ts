@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { CodeAttributeMainService } from '../../core/services/code-attribute-main.service';
 import { CodeAttributeDetailService } from '../../core/services/code-attribute-detail.service';
 import { CodeGeneratorService } from '../../core/services/code-generator.service';
+import { CodeTypeService } from '../../core/services/code-type.service';
+import { CodeAttributeTypeService } from '../../core/services/code-attribute-type.service';
 
 @Component({
     selector: 'app-code-type-main',
@@ -31,11 +33,17 @@ export class CodeTypeMainComponent implements OnInit {
 
     mainsSaved = false;
 
+    // Dropdown data
+    codeTypes: any[] = [];
+    codeAttributeTypes: any[] = [];
+
     constructor(
         private fb: FormBuilder,
         private codeAttributeMainService: CodeAttributeMainService,
         private codeAttributeDetailService: CodeAttributeDetailService,
         private codeGeneratorService: CodeGeneratorService,
+        private codeTypeService: CodeTypeService,
+        private codeAttributeTypeService: CodeAttributeTypeService,
         private router: Router
     ) { }
 
@@ -50,10 +58,35 @@ export class CodeTypeMainComponent implements OnInit {
         }
 
         this.initForms();
+        this.loadDropdownData();
+    }
+
+    loadDropdownData() {
+        // Load Code Types
+        this.codeTypeService.getAllCodeTypes().subscribe({
+            next: (response) => {
+                this.codeTypes = response.data;
+            },
+            error: (error) => {
+                console.error('Error loading code types:', error);
+            }
+        });
+
+        // Load Code Attribute Types
+        this.codeAttributeTypeService.getAllCodeAttributeTypes().subscribe({
+            next: (response) => {
+                this.codeAttributeTypes = response.data;
+            },
+            error: (error) => {
+                console.error('Error loading code attribute types:', error);
+            }
+        });
     }
 
     initForms() {
         this.mainForm = this.fb.group({
+            codeTypeId: ['', [Validators.required]],
+            codeAttributeTypeId: ['', [Validators.required]],
             code: ['', [Validators.required, Validators.minLength(2)]],
             nameAr: ['', [Validators.required]],
             nameEn: ['', [Validators.required]],
@@ -83,11 +116,6 @@ export class CodeTypeMainComponent implements OnInit {
 
     addMain() {
         if (this.mainForm.valid) {
-            if (this.mains.length >= this.codeAttributeTypeIds.length) {
-                this.errorMessage = `You can only add ${this.codeAttributeTypeIds.length} main entries (one for each attribute type).`;
-                return;
-            }
-
             this.mains.push({ ...this.mainForm.value });
             this.successMessage = `Main added! Total: ${this.mains.length}`;
             this.mainForm.reset();
@@ -114,11 +142,6 @@ export class CodeTypeMainComponent implements OnInit {
             return;
         }
 
-        if (this.mains.length !== this.codeAttributeTypeIds.length) {
-            this.errorMessage = `You must add exactly ${this.codeAttributeTypeIds.length} main entries (one for each attribute type).`;
-            return;
-        }
-
         this.isLoading = true;
         this.errorMessage = '';
         this.successMessage = '';
@@ -128,9 +151,13 @@ export class CodeTypeMainComponent implements OnInit {
 
         this.mains.forEach((main, index) => {
             const requestData = {
-                ...main,
-                codeTypeId: this.codeTypeId,
-                codeAttributeTypeId: this.codeAttributeTypeIds[index]
+                code: main.code,
+                nameAr: main.nameAr,
+                nameEn: main.nameEn,
+                descriptionAr: main.descriptionAr,
+                descriptionEn: main.descriptionEn,
+                codeTypeId: main.codeTypeId,
+                codeAttributeTypeId: main.codeAttributeTypeId
             };
 
             this.codeAttributeMainService.createCodeAttributeMain(requestData).subscribe({
@@ -169,11 +196,6 @@ export class CodeTypeMainComponent implements OnInit {
 
     addDetail() {
         if (this.detailForm.valid) {
-            if (this.details.length >= this.savedMainIds.length) {
-                this.errorMessage = `You can only add ${this.savedMainIds.length} detail entries (one for each main entry).`;
-                return;
-            }
-
             this.details.push({ ...this.detailForm.value });
             this.successMessage = `Detail added! Total: ${this.details.length}`;
             this.detailForm.reset();
@@ -205,8 +227,8 @@ export class CodeTypeMainComponent implements OnInit {
             return;
         }
 
-        if (this.details.length !== this.savedMainIds.length) {
-            this.errorMessage = `You must add exactly ${this.savedMainIds.length} detail entries (one for each main entry).`;
+        if (this.savedMainIds.length === 0) {
+            this.errorMessage = 'No main entries found. Please save main entries first.';
             return;
         }
 
@@ -218,9 +240,11 @@ export class CodeTypeMainComponent implements OnInit {
         const totalCount = this.details.length;
 
         this.details.forEach((detail, index) => {
+            // Cycle through savedMainIds if there are more details than mains
+            const mainIdIndex = index % this.savedMainIds.length;
             const requestData = {
                 ...detail,
-                attributeMainId: this.savedMainIds[index]
+                attributeMainId: this.savedMainIds[mainIdIndex]
             };
 
             this.codeAttributeDetailService.createCodeAttributeDetail(requestData).subscribe({
@@ -251,6 +275,8 @@ export class CodeTypeMainComponent implements OnInit {
         this.isSidebarCollapsed = !this.isSidebarCollapsed;
     }
 
+    get mainCodeTypeId() { return this.mainForm.get('codeTypeId'); }
+    get mainCodeAttributeTypeId() { return this.mainForm.get('codeAttributeTypeId'); }
     get mainCode() { return this.mainForm.get('code'); }
     get mainNameAr() { return this.mainForm.get('nameAr'); }
     get mainNameEn() { return this.mainForm.get('nameEn'); }

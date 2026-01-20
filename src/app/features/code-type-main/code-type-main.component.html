@@ -11,23 +11,49 @@
                 <span class="section-number">1</span>
                 <h2>Code Type Main</h2>
             </div>
-            <p class="section-description">Configure main settings - {{ mains.length }} of {{ codeAttributeTypeIds.length }} entries added</p>
+            <p class="section-description">Configure main settings - {{ mains.length }} entries added</p>
         </div>
 
         <div class="content">
             <div class="card">
                 <h3>Add New Main Entry</h3>
-                <p>Enter main details and click "Add Main" to add it to the list ({{ mains.length }}/{{ codeAttributeTypeIds.length }})</p>
+                <p>Enter main details and click "Add Main" to add it to the list</p>
 
-                @if (successMessage) {
-                <div class="alert alert-success">{{ successMessage }}</div>
-                }
 
-                @if (errorMessage) {
-                <div class="alert alert-error">{{ errorMessage }}</div>
-                }
 
                 <form [formGroup]="mainForm" (ngSubmit)="onSubmitMain()" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mainCodeTypeId">Code Type <span class="required">*</span></label>
+                            <select id="mainCodeTypeId" formControlName="codeTypeId"
+                                [class.invalid]="mainCodeTypeId?.invalid && mainCodeTypeId?.touched">
+                                <option value="">Select Code Type</option>
+                                @for (codeType of codeTypes; track codeType.id) {
+                                <option [value]="codeType.id">{{ codeType.codeTypeCode }} (ID: {{ codeType.id }})
+                                </option>
+                                }
+                            </select>
+                            @if (mainCodeTypeId?.invalid && mainCodeTypeId?.touched) {
+                            <span class="error-text">Code Type is required</span>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mainCodeAttributeTypeId">Code Attribute Type <span
+                                    class="required">*</span></label>
+                            <select id="mainCodeAttributeTypeId" formControlName="codeAttributeTypeId"
+                                [class.invalid]="mainCodeAttributeTypeId?.invalid && mainCodeAttributeTypeId?.touched">
+                                <option value="">Select Code Attribute Type</option>
+                                @for (attributeType of codeAttributeTypes; track attributeType.id) {
+                                <option [value]="attributeType.id">ID: {{ attributeType.id }}</option>
+                                }
+                            </select>
+                            @if (mainCodeAttributeTypeId?.invalid && mainCodeAttributeTypeId?.touched) {
+                            <span class="error-text">Code Attribute Type is required</span>
+                            }
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="mainCode">Code <span class="required">*</span></label>
@@ -48,8 +74,8 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="mainNameAr">Name (Arabic) <span class="required">*</span></label>
-                            <input id="mainNameAr" type="text" formControlName="nameAr" placeholder="الاسم بالعربية" dir="rtl"
-                                [class.invalid]="mainNameAr?.invalid && mainNameAr?.touched" />
+                            <input id="mainNameAr" type="text" formControlName="nameAr" placeholder="الاسم بالعربية"
+                                dir="rtl" [class.invalid]="mainNameAr?.invalid && mainNameAr?.touched" />
                             @if (mainNameAr?.invalid && mainNameAr?.touched) {
                             <span class="error-text">Arabic name is required</span>
                             }
@@ -68,8 +94,8 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="mainDescriptionAr">Description (Arabic) <span class="required">*</span></label>
-                            <textarea id="mainDescriptionAr" formControlName="descriptionAr" placeholder="الوصف بالعربية"
-                                dir="rtl" rows="4"
+                            <textarea id="mainDescriptionAr" formControlName="descriptionAr"
+                                placeholder="الوصف بالعربية" dir="rtl" rows="4"
                                 [class.invalid]="mainDescriptionAr?.invalid && mainDescriptionAr?.touched"></textarea>
                             @if (mainDescriptionAr?.invalid && mainDescriptionAr?.touched) {
                             <span class="error-text">Arabic description is required</span>
@@ -78,8 +104,9 @@
 
                         <div class="form-group">
                             <label for="mainDescriptionEn">Description (English) <span class="required">*</span></label>
-                            <textarea id="mainDescriptionEn" formControlName="descriptionEn" placeholder="English Description"
-                                rows="4" [class.invalid]="mainDescriptionEn?.invalid && mainDescriptionEn?.touched"></textarea>
+                            <textarea id="mainDescriptionEn" formControlName="descriptionEn"
+                                placeholder="English Description" rows="4"
+                                [class.invalid]="mainDescriptionEn?.invalid && mainDescriptionEn?.touched"></textarea>
                             @if (mainDescriptionEn?.invalid && mainDescriptionEn?.touched) {
                             <span class="error-text">English description is required</span>
                             }
@@ -87,7 +114,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" [disabled]="isLoading || mains.length >= codeAttributeTypeIds.length || mainsSaved">
+                        <button type="submit" class="btn btn-primary" [disabled]="isLoading || mainsSaved">
                             Add Main
                         </button>
                     </div>
@@ -96,7 +123,7 @@
 
             @if (mains.length > 0) {
             <div class="card mains-list">
-                <h3>Added Main Entries ({{ mains.length }}/{{ codeAttributeTypeIds.length }})</h3>
+                <h3>Added Main Entries ({{ mains.length }})</h3>
                 <p>Review your main entries before saving</p>
 
                 <div class="mains-table">
@@ -104,11 +131,22 @@
                     <div class="main-item">
                         <div class="main-header">
                             <h4>Main Entry #{{ $index + 1 }}</h4>
-                            <button type="button" class="btn btn-delete" (click)="removeMain($index)" [disabled]="isLoading || mainsSaved">
+                            <button type="button" class="btn btn-delete" (click)="removeMain($index)"
+                                [disabled]="isLoading || mainsSaved">
                                 ✕ Remove
                             </button>
                         </div>
                         <div class="main-details">
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <strong>Code Type ID:</strong>
+                                    <span>{{ main.codeTypeId }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Code Attribute Type ID:</strong>
+                                    <span>{{ main.codeAttributeTypeId }}</span>
+                                </div>
+                            </div>
                             <div class="detail-row">
                                 <div class="detail-item">
                                     <strong>Code:</strong>
@@ -141,7 +179,8 @@
                 </div>
 
                 <div class="save-all-actions">
-                    <button type="button" class="btn btn-success" (click)="saveAllMains()" [disabled]="isLoading || mains.length !== codeAttributeTypeIds.length || mainsSaved">
+                    <button type="button" class="btn btn-success" (click)="saveAllMains()"
+                        [disabled]="isLoading || mainsSaved">
                         @if (isLoading) {
                         <span class="spinner"></span>
                         Saving All Mains...
@@ -164,7 +203,7 @@
                 <span class="section-number">2</span>
                 <h2>Code Details</h2>
             </div>
-            <p class="section-description">Define details - {{ details.length }} of {{ savedMainIds.length }} entries added</p>
+            <p class="section-description">Define details - {{ details.length }} entries added</p>
             @if (!mainsSaved) {
             <div class="section-locked">
                 <span class="lock-icon">🔒</span>
@@ -176,7 +215,7 @@
         <div class="content" [class.disabled]="!mainsSaved">
             <div class="card">
                 <h3>Add New Detail Entry</h3>
-                <p>Enter detail information for each main entry ({{ details.length }}/{{ savedMainIds.length }})</p>
+                <p>Enter detail information - {{ details.length }} details added</p>
 
                 @if (successMessage && mainsSaved) {
                 <div class="alert alert-success">{{ successMessage }}</div>
@@ -191,8 +230,7 @@
                         <div class="form-group">
                             <label for="detailCode">Code <span class="required">*</span></label>
                             <input id="detailCode" type="text" formControlName="code" placeholder="e.g., XYZ, ABC"
-                                [class.invalid]="detailCode?.invalid && detailCode?.touched"
-                                [disabled]="!mainsSaved" />
+                                [class.invalid]="detailCode?.invalid && detailCode?.touched" [disabled]="!mainsSaved" />
                             @if (detailCode?.invalid && detailCode?.touched) {
                             <span class="error-text">Code is required (min 2 chars)</span>
                             }
@@ -208,8 +246,8 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="detailNameAr">Name (Arabic) <span class="required">*</span></label>
-                            <input id="detailNameAr" type="text" formControlName="nameAr" placeholder="الاسم بالعربية" dir="rtl"
-                                [class.invalid]="detailNameAr?.invalid && detailNameAr?.touched"
+                            <input id="detailNameAr" type="text" formControlName="nameAr" placeholder="الاسم بالعربية"
+                                dir="rtl" [class.invalid]="detailNameAr?.invalid && detailNameAr?.touched"
                                 [disabled]="!mainsSaved" />
                             @if (detailNameAr?.invalid && detailNameAr?.touched) {
                             <span class="error-text">Arabic name is required</span>
@@ -229,9 +267,10 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="detailDescriptionAr">Description (Arabic) <span class="required">*</span></label>
-                            <textarea id="detailDescriptionAr" formControlName="descriptionAr" placeholder="الوصف بالعربية"
-                                dir="rtl" rows="4"
+                            <label for="detailDescriptionAr">Description (Arabic) <span
+                                    class="required">*</span></label>
+                            <textarea id="detailDescriptionAr" formControlName="descriptionAr"
+                                placeholder="الوصف بالعربية" dir="rtl" rows="4"
                                 [class.invalid]="detailDescriptionAr?.invalid && detailDescriptionAr?.touched"
                                 [disabled]="!mainsSaved"></textarea>
                             @if (detailDescriptionAr?.invalid && detailDescriptionAr?.touched) {
@@ -240,9 +279,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="detailDescriptionEn">Description (English) <span class="required">*</span></label>
-                            <textarea id="detailDescriptionEn" formControlName="descriptionEn" placeholder="English Description"
-                                rows="4" [class.invalid]="detailDescriptionEn?.invalid && detailDescriptionEn?.touched"
+                            <label for="detailDescriptionEn">Description (English) <span
+                                    class="required">*</span></label>
+                            <textarea id="detailDescriptionEn" formControlName="descriptionEn"
+                                placeholder="English Description" rows="4"
+                                [class.invalid]="detailDescriptionEn?.invalid && detailDescriptionEn?.touched"
                                 [disabled]="!mainsSaved"></textarea>
                             @if (detailDescriptionEn?.invalid && detailDescriptionEn?.touched) {
                             <span class="error-text">English description is required</span>
@@ -251,7 +292,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" [disabled]="!mainsSaved || isLoading || details.length >= savedMainIds.length">
+                        <button type="submit" class="btn btn-primary" [disabled]="!mainsSaved || isLoading">
                             Add Detail
                         </button>
                     </div>
@@ -260,7 +301,7 @@
 
             @if (details.length > 0) {
             <div class="card details-list">
-                <h3>Added Detail Entries ({{ details.length }}/{{ savedMainIds.length }})</h3>
+                <h3>Added Detail Entries ({{ details.length }})</h3>
                 <p>Review your detail entries before saving</p>
 
                 <div class="details-table">
@@ -268,7 +309,8 @@
                     <div class="detail-item">
                         <div class="detail-header">
                             <h4>Detail Entry #{{ $index + 1 }}</h4>
-                            <button type="button" class="btn btn-delete" (click)="removeDetail($index)" [disabled]="isLoading">
+                            <button type="button" class="btn btn-delete" (click)="removeDetail($index)"
+                                [disabled]="isLoading">
                                 ✕ Remove
                             </button>
                         </div>
@@ -309,7 +351,7 @@
                 </div>
 
                 <div class="save-all-actions">
-                    <button type="button" class="btn btn-success" (click)="saveAllDetails()" [disabled]="isLoading || details.length !== savedMainIds.length">
+                    <button type="button" class="btn btn-success" (click)="saveAllDetails()" [disabled]="isLoading">
                         @if (isLoading) {
                         <span class="spinner"></span>
                         Saving All Details...

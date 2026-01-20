@@ -1,13 +1,38 @@
 <div class="code-settings-container">
-    <div class="header">
-        <h2>Code Settings</h2>
-        <p class="description">Review and confirm code structure settings</p>
+    <div class="page-header">
+        <h1>Code Settings</h1>
+        <p class="page-description">The following settings have been auto-configured based on your details.</p>
     </div>
 
+    <!-- Filter Dropdowns Above Container -->
+    <div class="filter-section">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="filterCodeType">Code Type</label>
+                <select id="filterCodeType" [(ngModel)]="selectedCodeTypeId" class="filter-select">
+                    <option [value]="null">All Code Types</option>
+                    @for (codeType of codeTypes; track codeType.id) {
+                    <option [value]="codeType.id">{{ codeType.codeTypeCode }} (ID: {{ codeType.id }})</option>
+                    }
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterAttributeDetail">Attribute Detail ID</label>
+                <select id="filterAttributeDetail" [(ngModel)]="selectedAttributeDetailId" class="filter-select">
+                    <option [value]="null">All Attribute Details</option>
+                    @for (detail of codeAttributeDetails; track detail.id) {
+                    <option [value]="detail.id">{{ detail.code }} (ID: {{ detail.id }})</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Container -->
     <div class="content">
         <div class="card">
             <h3>Settings Configuration</h3>
-            <p>The following settings have been auto-configured based on your details.</p>
 
             @if (successMessage) {
             <div class="alert alert-success">{{ successMessage }}</div>
@@ -20,52 +45,55 @@
             @if (isLoading) {
             <div class="loading-container">
                 <div class="spinner-large"></div>
-                <p>Creating settings...</p>
+                <p>Saving settings...</p>
             </div>
             }
 
-            @if (!isLoading && settings().length > 0) {
+            @if (!isLoading && settings.length > 0) {
             <div class="settings-display">
-                @for (setting of settings(); track setting.id) {
-                <div class="setting-row">
-                    <div class="setting-field">
-                        <label>Code</label>
-                        <input type="text" [value]="setting.code" readonly class="readonly-input" />
-                    </div>
-                    <div class="setting-field">
-                        <label>Sort Order</label>
-                        <input type="number" [value]="setting.sortOrder" readonly class="readonly-input" />
-                    </div>
-                    <div class="setting-field">
-                        <label>Separator</label>
-                        <input type="text" [value]="setting.separator" readonly class="readonly-input" />
-                    </div>
-                    <div class="setting-field">
-                        <label>Required</label>
-                        <input type="text" [value]="setting.isRequired ? 'Yes' : 'No'" readonly
-                            class="readonly-input" />
+                @for (setting of settings; track $index) {
+                <div class="setting-card">
+                    <div class="setting-row">
+                        <div class="setting-field">
+                            <label>Code</label>
+                            <input type="text" [value]="setting.code" readonly class="readonly-input" />
+                        </div>
+                        <div class="setting-field">
+                            <label>Sort Order</label>
+                            <input type="text" [value]="setting.sortOrder" readonly class="readonly-input" />
+                        </div>
+                        <div class="setting-field">
+                            <label>Separator</label>
+                            <input type="text" [value]="setting.separator" readonly class="readonly-input" />
+                        </div>
+                        <div class="setting-field">
+                            <label>Required</label>
+                            <input type="text" [value]="setting.isRequired ? 'Yes' : 'No'" readonly
+                                class="readonly-input" />
+                        </div>
                     </div>
                 </div>
                 }
             </div>
 
-            <div class="pattern-preview">
-                <h4>Generated Code Pattern</h4>
-                <div class="pattern-display">
-                    {{ generatedPattern() }}
-                </div>
-                <p class="pattern-description">
-                    This is the pattern that will be used for code generation
-                </p>
-            </div>
-
             <div class="form-actions">
-                <button class="btn btn-primary" (click)="onSave()">
+                <button class="btn btn-success" (click)="saveAllSettings()" [disabled]="isLoading">
+                    @if (isLoading) {
+                    <span class="spinner"></span>
+                    Saving...
+                    } @else {
                     Continue to Sequence
+                    }
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                 </button>
+            </div>
+            }
+
+            @if (!isLoading && settings.length === 0) {
+            <div class="no-results">
+                <p>No settings available. Please complete previous steps.</p>
             </div>
             }
         </div>

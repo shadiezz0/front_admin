@@ -32,6 +32,25 @@ export interface CodeAttributeDetailResponse {
     };
 }
 
+export interface CodeAttributeDetailListResponse {
+    statusCode: number;
+    message: string;
+    data: {
+        id: number;
+        code: string;
+        attributeMainId: number;
+        nameAr: string;
+        nameEn: string;
+        descriptionAr: string;
+        descriptionEn: string;
+        parentDetailId: number | null;
+        sortOrder: number;
+        isActive: boolean;
+        createdAt: string;
+        createdBy: string;
+    }[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -44,6 +63,12 @@ export class CodeAttributeDetailService {
         return this.http.post<CodeAttributeDetailResponse>(
             `${this.apiUrl}/CodeAttributeDetails/Create`,
             data
+        );
+    }
+
+    getAllCodeAttributeDetails(): Observable<CodeAttributeDetailListResponse> {
+        return this.http.get<CodeAttributeDetailListResponse>(
+            `${this.apiUrl}/CodeAttributeDetails/GetAll`
         );
     }
 }

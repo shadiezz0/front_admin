@@ -29,6 +29,24 @@ export interface CodeTypeResponse {
     };
 }
 
+export interface CodeTypeListResponse {
+    statusCode: number;
+    message: string;
+    data: {
+        id: number;
+        codeTypeCode: string;
+        nameAr: string;
+        nameEn: string;
+        descriptionAr: string;
+        descriptionEn: string;
+        isActive: boolean;
+        createdAt: string;
+        createdBy: string;
+        approvedAt: string | null;
+        approvedBy: string | null;
+    }[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -41,6 +59,12 @@ export class CodeTypeService {
         return this.http.post<CodeTypeResponse>(
             `${this.apiUrl}/CodeTypes/Create`,
             data
+        );
+    }
+
+    getAllCodeTypes(): Observable<CodeTypeListResponse> {
+        return this.http.get<CodeTypeListResponse>(
+            `${this.apiUrl}/CodeTypes/GetAll`
         );
     }
 }

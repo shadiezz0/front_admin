@@ -25,6 +25,21 @@ export interface CodeAttributeTypeResponse {
     };
 }
 
+export interface CodeAttributeTypeListResponse {
+    statusCode: number;
+    message: string;
+    data: {
+        id: number;
+        nameAr: string;
+        nameEn: string;
+        descriptionAr: string;
+        descriptionEn: string;
+        isActive: boolean;
+        createdAt: string;
+        createdBy: string;
+    }[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -37,6 +52,12 @@ export class CodeAttributeTypeService {
         return this.http.post<CodeAttributeTypeResponse>(
             `${this.apiUrl}/CodeAttributeTypes/Create`,
             data
+        );
+    }
+
+    getAllCodeAttributeTypes(): Observable<CodeAttributeTypeListResponse> {
+        return this.http.get<CodeAttributeTypeListResponse>(
+            `${this.apiUrl}/CodeAttributeTypes/GetAll`
         );
     }
 }
