@@ -12,7 +12,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 @Component({
     selector: 'app-code-type-main',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, AlertComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule],
     templateUrl: './code-type-main.component.html',
     styleUrl: './code-type-main.component.css'
 })
