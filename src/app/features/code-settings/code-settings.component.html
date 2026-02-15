@@ -12,7 +12,7 @@
                 <select id="filterCodeType" [(ngModel)]="selectedCodeTypeId" class="filter-select">
                     <option [value]="null">All Code Types</option>
                     @for (codeType of codeTypes; track codeType.id) {
-                    <option [value]="codeType.id">{{ codeType.codeTypeCode }} (ID: {{ codeType.id }})</option>
+                    <option [value]="codeType.id">{{ codeType.codeTypeCode }}</option>
                     }
                 </select>
             </div>
@@ -22,7 +22,7 @@
                 <select id="filterAttributeDetail" [(ngModel)]="selectedAttributeDetailId" class="filter-select">
                     <option [value]="null">All Attribute Details</option>
                     @for (detail of codeAttributeDetails; track detail.id) {
-                    <option [value]="detail.id">{{ detail.code }} (ID: {{ detail.id }})</option>
+                    <option [value]="detail.id">{{ detail.code }}</option>
                     }
                 </select>
             </div>

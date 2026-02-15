@@ -30,16 +30,14 @@ export class CodeSettingsComponent implements OnInit {
     settings: SettingDisplay[] = [];
     savedSettingIds: number[] = [];
 
- 
+
     isLoading = false;
     errorMessage = '';
     successMessage = '';
 
-    // Dropdown data
     codeTypes: any[] = [];
     codeAttributeDetails: any[] = [];
 
-    // Selected filters
     selectedCodeTypeId: number | null = null;
     selectedAttributeDetailId: number | null = null;
 
@@ -66,7 +64,6 @@ export class CodeSettingsComponent implements OnInit {
             return;
         }
 
-        // Get saved codes from the previous component (Code Details step)
         this.savedCodes = this.getSavedCodesFromDetails();
 
         this.loadDropdownData();
@@ -74,7 +71,6 @@ export class CodeSettingsComponent implements OnInit {
     }
 
     loadDropdownData() {
-        // Load Code Types
         this.codeTypeService.getAllCodeTypes().subscribe({
             next: (response) => {
                 this.codeTypes = response.data;

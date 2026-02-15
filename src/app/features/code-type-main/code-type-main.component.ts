@@ -12,7 +12,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 @Component({
     selector: 'app-code-type-main',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, AlertComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule],
     templateUrl: './code-type-main.component.html',
     styleUrl: './code-type-main.component.css'
 })
@@ -147,41 +147,40 @@ export class CodeTypeMainComponent implements OnInit {
         this.errorMessage = '';
         this.successMessage = '';
 
-        let completedCount = 0;
-        const totalCount = this.mains.length;
+        // Prepare bulk data - array of all main entries
+        const bulkData = this.mains.map(main => ({
+            code: main.code,
+            nameAr: main.nameAr,
+            nameEn: main.nameEn,
+            descriptionAr: main.descriptionAr,
+            descriptionEn: main.descriptionEn,
+            codeTypeId: main.codeTypeId,
+            codeAttributeTypeId: main.codeAttributeTypeId
+        }));
 
-        this.mains.forEach((main, index) => {
-            const requestData = {
-                code: main.code,
-                nameAr: main.nameAr,
-                nameEn: main.nameEn,
-                descriptionAr: main.descriptionAr,
-                descriptionEn: main.descriptionEn,
-                codeTypeId: main.codeTypeId,
-                codeAttributeTypeId: main.codeAttributeTypeId
-            };
+        // Single bulk API call
+        this.codeAttributeMainService.createCodeAttributeMainsBulk(bulkData).subscribe({
+            next: (response) => {
+                // Extract all IDs from the response
+                this.savedMainIds = response.data.map(item => item.id);
 
-            this.codeAttributeMainService.createCodeAttributeMain(requestData).subscribe({
-                next: (response) => {
-                    this.savedMainIds.push(response.data.id);
-                    this.codeGeneratorService.addCodeAttributeMainId(response.data.id);
-                    completedCount++;
+                // Add all IDs to code generator service
+                response.data.forEach(item => {
+                    this.codeGeneratorService.addCodeAttributeMainId(item.id);
+                });
 
-                    if (completedCount === totalCount) {
-                        this.isLoading = false;
-                        this.successMessage = `All ${totalCount} mains saved successfully! Now you can add details below.`;
-                        this.mainsSaved = true;
+                this.isLoading = false;
+                this.successMessage = `All ${response.data.length} mains saved successfully! Now you can add details below.`;
+                this.mainsSaved = true;
 
-                        setTimeout(() => {
-                            document.getElementById('details-section')?.scrollIntoView({ behavior: 'smooth' });
-                        }, 1000);
-                    }
-                },
-                error: (error) => {
-                    this.isLoading = false;
-                    this.errorMessage = error.error?.message || `Failed to save main ${index + 1}. Please try again.`;
-                }
-            });
+                setTimeout(() => {
+                    document.getElementById('details-section')?.scrollIntoView({ behavior: 'smooth' });
+                }, 1000);
+            },
+            error: (error) => {
+                this.isLoading = false;
+                this.errorMessage = error.error?.message || 'Failed to save mains. Please try again.';
+            }
         });
     }
 
@@ -237,38 +236,39 @@ export class CodeTypeMainComponent implements OnInit {
         this.errorMessage = '';
         this.successMessage = '';
 
-        let completedCount = 0;
-        const totalCount = this.details.length;
-
-        this.details.forEach((detail, index) => {
+        // Prepare bulk data - array of all detail entries
+        const bulkData = this.details.map((detail, index) => {
             // Cycle through savedMainIds if there are more details than mains
             const mainIdIndex = index % this.savedMainIds.length;
-            const requestData = {
+            return {
                 ...detail,
                 attributeMainId: this.savedMainIds[mainIdIndex]
             };
+        });
 
-            this.codeAttributeDetailService.createCodeAttributeDetail(requestData).subscribe({
-                next: (response) => {
-                    this.savedDetailIds.push(response.data.id);
-                    this.codeGeneratorService.addCodeAttributeDetailId(response.data.id);
-                    completedCount++;
+        // Single bulk API call
+        this.codeAttributeDetailService.createCodeAttributeDetailsBulk(bulkData).subscribe({
+            next: (response) => {
+                // Extract all IDs from the response
+                this.savedDetailIds = response.data.map(item => item.id);
 
-                    if (completedCount === totalCount) {
-                        this.isLoading = false;
-                        this.successMessage = `All ${totalCount} details saved successfully!`;
-                        this.codeGeneratorService.completeStep(2);
+                // Add all IDs to code generator service
+                response.data.forEach(item => {
+                    this.codeGeneratorService.addCodeAttributeDetailId(item.id);
+                });
 
-                        setTimeout(() => {
-                            this.router.navigate(['/code-settings']);
-                        }, 1500);
-                    }
-                },
-                error: (error) => {
-                    this.isLoading = false;
-                    this.errorMessage = error.error?.message || `Failed to save detail ${index + 1}. Please try again.`;
-                }
-            });
+                this.isLoading = false;
+                this.successMessage = `All ${response.data.length} details saved successfully!`;
+                this.codeGeneratorService.completeStep(2);
+
+                setTimeout(() => {
+                    this.router.navigate(['/code-settings']);
+                }, 1500);
+            },
+            error: (error) => {
+                this.isLoading = false;
+                this.errorMessage = error.error?.message || 'Failed to save details. Please try again.';
+            }
         });
     }
 

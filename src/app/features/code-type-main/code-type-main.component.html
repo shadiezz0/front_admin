@@ -35,7 +35,7 @@
                                 [class.invalid]="mainCodeTypeId?.invalid && mainCodeTypeId?.touched">
                                 <option value="">Select Code Type</option>
                                 @for (codeType of codeTypes; track codeType.id) {
-                                <option [value]="codeType.id">{{ codeType.codeTypeCode }} (ID: {{ codeType.id }})
+                                <option [value]="codeType.id">{{ codeType.codeTypeCode }}
                                 </option>
                                 }
                             </select>
@@ -51,7 +51,7 @@
                                 [class.invalid]="mainCodeAttributeTypeId?.invalid && mainCodeAttributeTypeId?.touched">
                                 <option value="">Select Code Attribute Type</option>
                                 @for (attributeType of codeAttributeTypes; track attributeType.id) {
-                                <option [value]="attributeType.id">ID: {{ attributeType.id }}</option>
+                                <option [value]="attributeType.id">{{ attributeType.nameEn }}</option>
                                 }
                             </select>
                             @if (mainCodeAttributeTypeId?.invalid && mainCodeAttributeTypeId?.touched) {

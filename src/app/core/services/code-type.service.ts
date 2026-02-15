@@ -11,6 +11,7 @@ export interface CodeTypeRequest {
     descriptionEn: string;
 }
 
+
 export interface CodeTypeResponse {
     statusCode: number;
     message: string;

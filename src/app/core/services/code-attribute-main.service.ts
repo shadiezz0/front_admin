@@ -31,6 +31,24 @@ export interface CodeAttributeMainResponse {
     };
 }
 
+export interface CodeAttributeMainBulkResponse {
+    statusCode: number;
+    message: string;
+    data: {
+        id: number;
+        codeTypeId: number;
+        code: string;
+        nameAr: string;
+        nameEn: string;
+        descriptionAr: string;
+        descriptionEn: string;
+        codeAttributeTypeId: number;
+        isActive: boolean;
+        createdAt: string;
+        createdBy: string;
+    }[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -42,6 +60,13 @@ export class CodeAttributeMainService {
     createCodeAttributeMain(data: CodeAttributeMainRequest): Observable<CodeAttributeMainResponse> {
         return this.http.post<CodeAttributeMainResponse>(
             `${this.apiUrl}/CodeAttributeMains/Create`,
+            data
+        );
+    }
+
+    createCodeAttributeMainsBulk(data: CodeAttributeMainRequest[]): Observable<CodeAttributeMainBulkResponse> {
+        return this.http.post<CodeAttributeMainBulkResponse>(
+            `${this.apiUrl}/CodeAttributeMains/CreateBulk`,
             data
         );
     }
