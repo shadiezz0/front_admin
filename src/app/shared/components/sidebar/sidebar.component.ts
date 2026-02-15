@@ -34,7 +34,6 @@ export class SidebarComponent {
                         { label: 'Code Type', icon: '', route: '/code-type' },
                         { label: 'Code Type Attribute', icon: '', route: '/code-type-attribute' },
                         { label: 'Code Type Main', icon: '', route: '/code-type-main' },
-                        { label: 'Code Details', icon: '', route: '/code-details' },
                         { label: 'Code Settings', icon: '', route: '/code-settings' },
                         { label: 'Code Sequence', icon: '', route: '/code-sequence' },
                         { label: 'Code Generation', icon: '', route: '/code-generation' }
