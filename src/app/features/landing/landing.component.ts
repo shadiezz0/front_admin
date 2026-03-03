@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services';
@@ -29,9 +29,9 @@ import { AuthService } from '../../core/services';
         </div>
 
         <!-- User chip shown when authenticated -->
-        <div class="nav-user" *ngIf="user">
-          <div class="user-avatar">{{ userInitial }}</div>
-          <span class="user-name">{{ user.userCode }}</span>
+        <div class="nav-user" *ngIf="authService.isAuthenticated()">
+          <div class="user-avatar">{{ userInitial() }}</div>
+          <span class="user-name">{{ authService.currentUser()?.userCode }}</span>
         </div>
       </nav>
 
@@ -354,18 +354,23 @@ import { AuthService } from '../../core/services';
   `]
 })
 export class LandingComponent {
-  user: any = null;
-  userInitial = '?';
+  userInitial = computed(() => {
+    const user = this.authService.currentUser();
+    return user?.userCode?.charAt(0)?.toUpperCase() || '?';
+  });
 
   constructor(
     private router: Router,
-    private authService: AuthService
-  ) {
-    this.user = this.authService.currentUser();
-    this.userInitial = this.user?.userCode?.charAt(0)?.toUpperCase() || '?';
-  }
+    public authService: AuthService
+  ) { }
 
   goToDashboard(): void {
-    this.router.navigate(['/dashboard']);
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      // If not logged in, maybe show a message or just trigger navigation
+      // which will be caught by the guard anyway.
+      this.router.navigate(['/dashboard']);
+    }
   }
 }
