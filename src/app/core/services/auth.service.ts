@@ -6,22 +6,21 @@ import { environment } from '../../../environments/environment';
 import { User, LoginResponse, LoginCredentials, RegisterData } from '../models';
 import { STORAGE_KEYS, API_ENDPOINTS, ROUTES } from '../constants';
 
-// Response shape from POST /Auth/validate-token
 interface ValidateTokenResponse {
     success: boolean;
     message: string;
     data: {
-        token: string;          // the validated token (use this for storage)
+        token: string;          
         userCode: string;
         employeeName: string;
+        empFullNameEn?: string;
         roles: string[];
         permissions: string[];
         expiresOn: string;
-        genderId?: number;      // optional — not always returned
+        genderId?: number;      
     };
 }
 
-// Response shape from GET /Auth/check-token
 interface CheckTokenResponse {
     success: boolean;
     isTokenValid: boolean;
@@ -114,7 +113,7 @@ export class AuthService {
                 if (response.success && response.data) {
                     const user: User = {
                         userCode: response.data.userCode,
-                        employeeName: response.data.employeeName || '',
+                        employeeName: response.data.empFullNameEn || response.data.employeeName || '',
                         roles: response.data.roles,
                         permissions: response.data.permissions,
                         genderId: 0, // Not provided by whoami usually
@@ -246,7 +245,7 @@ export class AuthService {
         // Create user object
         const user: User = {
             userCode: data.userCode,
-            employeeName: data.employeeName,
+            employeeName: data.empFullNameEn || data.employeeName || '',
             roles: data.roles,
             permissions: data.permissions,
             genderId: data.genderId,

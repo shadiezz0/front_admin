@@ -12,6 +12,7 @@ export interface LoginData {
     claims: Record<string, any>;
     expiresOn: string;
     employeeName: string;
+    empFullNameEn?: string;
     permissions: string[];
     genderId: number;
 }
@@ -27,6 +28,7 @@ export interface LoginResponse {
 export interface User {
     userCode: string;
     employeeName: string;
+    empFullNameEn?: string;
     roles: string[];
     permissions: string[];
     genderId: number;
