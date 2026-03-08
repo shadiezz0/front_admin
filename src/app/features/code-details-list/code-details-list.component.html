@@ -1,12 +1,12 @@
-<div class="code-type-list-container">
+<div class="code-details-list-container">
 
     <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h2 class="main-content-title">Code Types</h2>
+            <h2 class="main-content-title">Attribute Code Details</h2>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Code Type List</li>
+                <li class="breadcrumb-item active" aria-current="page">Code Details List</li>
             </ol>
         </div>
     </div>
@@ -17,13 +17,13 @@
         <div class="card-top-bar">
             <div class="section-label">
                 <span class="label-bar"></span>
-                <span class="label-text">CODE TYPE LIST</span>
+                <span class="label-text">CODE DETAILS LIST</span>
             </div>
             <div class="top-actions">
                 <button class="btn btn-filter" (click)="toggleFilter()" id="filter-btn">
                     <i class="filter-icon">⚙</i> Filter
                 </button>
-                <button class="btn btn-add" (click)="navigateToAdd()" id="add-code-type-btn">
+                <button class="btn btn-add" (click)="navigateToAdd()" id="add-code-detail-btn">
                     + Add
                 </button>
             </div>
@@ -42,6 +42,11 @@
                         <label for="filter-name-ar">Name (Ar)</label>
                         <input id="filter-name-ar" type="text" class="form-control" [(ngModel)]="filterRequest.nameAr"
                             placeholder="بحث بالاسم العربي" />
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-code">Code</label>
+                        <input id="filter-code" type="text" class="form-control" [(ngModel)]="filterRequest.code"
+                            placeholder="Search by code" />
                     </div>
                     <div class="filter-actions">
                         <button class="btn btn-apply-filter" (click)="applyFilter()"
@@ -62,7 +67,7 @@
         @if (isLoading) {
         <div class="loading-spinner">
             <div class="spinner"></div>
-            <span>Loading code types...</span>
+            <span>Loading code details...</span>
         </div>
         }
 
@@ -76,26 +81,26 @@
                         <th>Name (En)</th>
                         <th>Name (Ar)</th>
                         <th>Code</th>
+                        <th>Attribute Main ID</th>
                         <th>Description (En)</th>
-                        <th>Description (Ar)</th>
                         <th>Created Date</th>
                         <th class="col-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (filteredCodeTypes.length === 0) {
+                    @if (filteredCodeDetails.length === 0) {
                     <tr>
-                        <td colspan="9" class="no-data">No code types found.</td>
+                        <td colspan="8" class="no-data">No code details found.</td>
                     </tr>
                     }
-                    @for (item of filteredCodeTypes; track item.id; let i = $index) {
+                    @for (item of filteredCodeDetails; track item.id; let i = $index) {
                     <tr class="table-row">
                         <td class="col-num">{{ i + 1 }}</td>
-                        <td class="name-en">{{ item.nameEn }}</td>
-                        <td class="name-ar">{{ item.nameAr }}</td>
-                        <td><span class="code-badge">{{ item.codeTypeCode }}</span></td>
+                        <td class="name-en">{{ item.nameEn || '—' }}</td>
+                        <td class="name-ar">{{ item.nameAr || '—' }}</td>
+                        <td><span class="code-badge">{{ item.code || '—' }}</span></td>
+                        <td>{{ item.attributeMainId }}</td>
                         <td class="desc-col">{{ item.descriptionEn || '—' }}</td>
-                        <td class="desc-col">{{ item.descriptionAr || '—' }}</td>
                         <td>{{ formatDate(item.createdAt) }}</td>
                         <td class="actions-cell">
                             <button class="action-btn action-btn--edit" title="Edit" [id]="'edit-btn-' + item.id"

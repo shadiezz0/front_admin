@@ -18,6 +18,7 @@ export class CodeTypeComponent implements OnInit {
     isLoading = false;
     errorMessage = '';
     successMessage = '';
+    codeTypes: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -38,31 +39,67 @@ export class CodeTypeComponent implements OnInit {
 
     onSubmit() {
         if (this.codeTypeForm.valid && !this.isLoading) {
-            this.isLoading = true;
-            this.errorMessage = '';
-            this.successMessage = '';
-
-            this.codeTypeService.createCodeType(this.codeTypeForm.value).subscribe({
-                next: (response) => {
-                    this.successMessage = response.message;
-                    this.codeGeneratorService.setCodeTypeData(response.data.id, response.data.codeTypeCode);
-                    this.codeGeneratorService.completeStep(0); // Mark Code Type as completed
-
-                    // Navigate to next step after short delay
-                    setTimeout(() => {
-                        this.router.navigate(['/code-type-attribute']);
-                    }, 500);
-                },
-                error: (error) => {
-                    this.isLoading = false;
-                    this.errorMessage = error.error?.message || 'Failed to create code type. Please try again.';
-                }
-            });
+            this.addCodeType();
         } else {
             Object.keys(this.codeTypeForm.controls).forEach(key => {
                 this.codeTypeForm.get(key)?.markAsTouched();
             });
         }
+    }
+
+    addCodeType() {
+        this.codeTypes.push({ ...this.codeTypeForm.value });
+        this.successMessage = `Code Type added to list! Total: ${this.codeTypes.length}`;
+        this.codeTypeForm.reset();
+
+        setTimeout(() => {
+            this.successMessage = '';
+        }, 2000);
+    }
+
+    removeCodeType(index: number) {
+        this.codeTypes.splice(index, 1);
+        this.successMessage = `Code Type removed from list!`;
+        setTimeout(() => {
+            this.successMessage = '';
+        }, 2000);
+    }
+
+    saveAllCodeTypes() {
+        if (this.codeTypes.length === 0) {
+            this.errorMessage = 'Please add at least one code type before saving.';
+            return;
+        }
+
+        this.isLoading = true;
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        let completedCount = 0;
+        const totalCount = this.codeTypes.length;
+
+        this.codeTypes.forEach((item, index) => {
+            this.codeTypeService.createCodeType(item).subscribe({
+                next: (response) => {
+                    this.codeGeneratorService.setCodeTypeData(response.data.id, response.data.codeTypeCode);
+                    completedCount++;
+
+                    if (completedCount === totalCount) {
+                        this.isLoading = false;
+                        this.codeGeneratorService.completeStep(0);
+                        this.successMessage = `All ${totalCount} code types saved successfully!`;
+
+                        setTimeout(() => {
+                            this.router.navigate(['/code-type-attribute']);
+                        }, 1500);
+                    }
+                },
+                error: (error) => {
+                    this.isLoading = false;
+                    this.errorMessage = error.error?.message || `Failed to save code type ${index + 1}.`;
+                }
+            });
+        });
     }
 
     onCancel() {

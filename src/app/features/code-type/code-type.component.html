@@ -14,6 +14,10 @@
         <div class="col-lg-12 col-md-12">
             <div class="card custom-card">
                 <div class="card-body">
+                    <h3 class="card-title">Add New Code Type</h3>
+                    <p class="card-description">Enter code type details and click "Add Code Type" to add it to the list
+                        ({{ codeTypes.length }} currently added)</p>
+
                     <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
                     <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
 
@@ -69,24 +73,76 @@
                             <div class="col-md-12 mb-3">
                                 <label for="descriptionAr" class="form-label">Description (Ar)</label>
                                 <textarea id="descriptionAr" class="form-control" formControlName="descriptionAr"
-                                    placeholder="Enter Arabic Description" dir="rtl" rows="3"></textarea>
+                                    placeholder="Enter Arabic Description" rows="3"></textarea>
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="button" class="btn btn-secondary-cancel me-2"
-                                (click)="onCancel()">Cancel</button>
                             <button type="submit" class="btn btn-primary-save" [disabled]="isLoading">
-                                @if (isLoading) {
-                                <span class="spinner-border spinner-border-sm me-1"></span>
-                                Saving...
-                                } @else {
-                                Save
-                                }
+                                Add Code Type
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Pending List -->
+            <div class="card custom-card attributes-list-card mt-4" *ngIf="codeTypes.length > 0">
+                <div class="card-body">
+                    <h3 class="card-title">Added Code Types ({{ codeTypes.length }})</h3>
+                    <p class="card-description">Review before saving to database</p>
+
+                    <div class="attributes-items-container">
+                        @for (item of codeTypes; track $index) {
+                        <div class="attribute-item">
+                            <div class="attribute-header">
+                                <h4>Entry #{{ $index + 1 }} - {{ item.codeTypeCode }}</h4>
+                                <button type="button" class="btn btn-danger-delete" (click)="removeCodeType($index)">
+                                    <i class="fa fa-trash me-1"></i> Remove
+                                </button>
+                            </div>
+                            <div class="attribute-details">
+                                <div class="detail-row">
+                                    <div class="detail-item">
+                                        <strong>Code</strong>
+                                        <span>{{ item.codeTypeCode }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Name (Arabic)</strong>
+                                        <span>{{ item.nameAr }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Name (English)</strong>
+                                        <span>{{ item.nameEn }}</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row mt-3">
+                                    <div class="detail-item">
+                                        <strong>Description (Arabic)</strong>
+                                        <span>{{ item.descriptionAr }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Description (English)</strong>
+                                        <span>{{ item.descriptionEn }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-5">
+                        <button type="button" class="btn btn-primary-save btn-lg px-5" (click)="saveAllCodeTypes()"
+                            [disabled]="isLoading">
+                            @if (isLoading) {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                            Saving All...
+                            } @else {
+                            Save All Entries & Continue
+                            }
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

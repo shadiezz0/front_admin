@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CodeTypeSequenceService, CodeTypeSequenceData } from '../../core/services/code-type-sequence.service';
+import { CodeTypeSequenceService } from '../../core/services/code-type-sequence.service';
 import { CodeTypeService, CodeTypeItem } from '../../core/services/code-type.service';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { Router } from '@angular/router';
@@ -13,16 +13,12 @@ import { Router } from '@angular/router';
     templateUrl: './code-sequence.component.html',
     styleUrl: './code-sequence.component.css'
 })
-export class CodeSequenceComponent implements OnInit, OnDestroy {
+export class CodeSequenceComponent implements OnInit {
 
     seqForm!: FormGroup;
 
-    // Data
     codeTypes: CodeTypeItem[] = [];
     isLoadingTypes = true;
-    savedSeqs: any[] = [];
-
-    // State
     isSaving = false;
     errorMessage = '';
     successMessage = '';
@@ -64,7 +60,7 @@ export class CodeSequenceComponent implements OnInit, OnDestroy {
         });
     }
 
-    onAddSequence(): void {
+    onSubmit(): void {
         if (this.seqForm.invalid || this.isSaving) {
             this.seqForm.markAllAsTouched();
             return;
@@ -87,41 +83,21 @@ export class CodeSequenceComponent implements OnInit, OnDestroy {
         this.sequenceService.createCodeTypeSequence(payload).subscribe({
             next: (res) => {
                 this.isSaving = false;
-                this.successMessage = `✓ Sequence "${fv.sequenceName}" added.`;
-                this.savedSeqs.unshift({
-                    ...res.data,
-                    codeTypeLabel: this.codeTypes.find(ct => ct.id == fv.codeTypeId)?.nameEn || `#${fv.codeTypeId}`
-                });
-
-                // Reset detail fields
-                const keepTypeId = this.seqForm.get('codeTypeId')?.value;
-                this.seqForm.reset();
-                this.seqForm.patchValue({
-                    codeTypeId: keepTypeId,
-                    startValue: 1,
-                    maxValue: 999999,
-                    cycling: 0
-                });
-
-                setTimeout(() => this.successMessage = '', 3000);
+                this.successMessage = `✓ Sequence "${fv.sequenceName}" saved! Redirecting...`;
+                setTimeout(() => this.router.navigate(['/code-generation']), 1200);
             },
             error: (err) => {
                 this.isSaving = false;
-                this.errorMessage = err.error?.message || 'Failed to save sequence.';
+                // 200 with success text means already exists / updated — still proceed
+                const msg: string = err.error?.message || '';
+                if (err.status === 200 || msg.toLowerCase().includes('updated') || msg.toLowerCase().includes('existed')) {
+                    this.successMessage = `✓ Sequence saved. Redirecting...`;
+                    setTimeout(() => this.router.navigate(['/code-generation']), 1200);
+                } else {
+                    this.errorMessage = msg || 'Failed to save sequence.';
+                }
             }
         });
-    }
-
-    continueToGeneration(): void {
-        if (this.savedSeqs.length === 0) {
-            this.errorMessage = 'Add at least one sequence before continuing.';
-            return;
-        }
-        this.router.navigate(['/code-generation']);
-    }
-
-    removeSaved(index: number): void {
-        this.savedSeqs.splice(index, 1);
     }
 
     get codeTypeId() { return this.seqForm.get('codeTypeId'); }
@@ -130,6 +106,4 @@ export class CodeSequenceComponent implements OnInit, OnDestroy {
     get minValue() { return this.seqForm.get('minValue'); }
     get maxValue() { return this.seqForm.get('maxValue'); }
     get cycling() { return this.seqForm.get('cycling'); }
-
-    ngOnDestroy(): void { }
 }

@@ -49,6 +49,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/code-details/code-details.component').then(m => m.CodeDetailsComponent)
             },
             {
+                path: 'all-code-details',
+                loadComponent: () => import('./features/code-details-list/code-details-list.component').then(m => m.CodeDetailsListComponent)
+            },
+            {
                 path: 'code-settings',
                 loadComponent: () => import('./features/code-settings/code-settings.component').then(m => m.CodeSettingsComponent)
             },

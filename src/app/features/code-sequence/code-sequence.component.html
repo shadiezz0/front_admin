@@ -14,9 +14,8 @@
         <div class="col-lg-12 col-md-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <h3 class="card-title">Add New Sequence</h3>
-                    <p class="card-description">Define range and cycling, then add to session ({{ savedSeqs.length }}
-                        added)</p>
+                    <h3 class="card-title">Add Sequence</h3>
+                    <p class="card-description">Define the sequence range and cycling for the selected code type</p>
 
                     <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
                     <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
@@ -26,7 +25,7 @@
                         <div class="skeleton-field"></div>
                     </div>
                     } @else {
-                    <form [formGroup]="seqForm" (ngSubmit)="onAddSequence()" class="needs-validation" novalidate>
+                    <form [formGroup]="seqForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
                         <!-- Type and Name -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -39,6 +38,9 @@
                                     <option [value]="ct.id">{{ ct.codeTypeCode }} — {{ ct.nameEn }}</option>
                                     }
                                 </select>
+                                <div class="error-text" *ngIf="codeTypeId?.invalid && codeTypeId?.touched">
+                                    Code Type is required
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="sequenceName" class="form-label">Sequence Name <span
@@ -46,6 +48,9 @@
                                 <input id="sequenceName" type="text" class="form-control" formControlName="sequenceName"
                                     placeholder="e.g. Employee Seq"
                                     [class.is-invalid]="sequenceName?.invalid && sequenceName?.touched" />
+                                <div class="error-text" *ngIf="sequenceName?.invalid && sequenceName?.touched">
+                                    Sequence name is required
+                                </div>
                             </div>
                         </div>
 
@@ -75,63 +80,21 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
+                        <!-- Submit -->
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary-save">
-                                Add Sequence
+                            <button type="submit" class="btn btn-primary-save btn-lg px-5" [disabled]="isSaving">
+                                @if (isSaving) {
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                Saving...
+                                } @else {
+                                Save & Continue to Generation
+                                }
                             </button>
                         </div>
                     </form>
                     }
                 </div>
             </div>
-
-            <!-- Saved Sequences List -->
-            @if (savedSeqs.length > 0) {
-            <div class="card custom-card attributes-list-card mt-4">
-                <div class="card-body">
-                    <h3 class="card-title">Added Sequences ({{ savedSeqs.length }})</h3>
-                    <p class="card-description">Review before continuing to generation</p>
-
-                    <div class="attributes-items-container">
-                        @for (item of savedSeqs; track $index) {
-                        <div class="attribute-item">
-                            <div class="attribute-header">
-                                <h4>Sequence: {{ item.nameEn }}</h4>
-                                <button type="button" class="btn btn-danger-delete" (click)="removeSaved($index)">
-                                    <i class="fa fa-trash me-1"></i> Remove
-                                </button>
-                            </div>
-                            <div class="attribute-details">
-                                <div class="detail-row">
-                                    <div class="detail-item">
-                                        <strong>Code Type</strong>
-                                        <span>{{ item.codeTypeLabel }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Range</strong>
-                                        <span>{{ item.startWith }} to {{ item.maxValue }}</span>
-                                    </div>
-                                </div>
-                                <div class="detail-row mt-3">
-                                    <div class="detail-item">
-                                        <strong>Cycling</strong>
-                                        <span>{{ item.cycling }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        }
-                    </div>
-
-                    <div class="d-flex justify-content-center mt-5">
-                        <button type="button" class="btn btn-primary-save btn-lg px-5" (click)="continueToGeneration()">
-                            Save All & Continue to Generation
-                        </button>
-                    </div>
-                </div>
-            </div>
-            }
         </div>
     </div>
 </div>

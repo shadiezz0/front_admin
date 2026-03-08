@@ -2,24 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CodeGenerationService } from '../../core/services/code-generation.service';
-
-interface CodeItem {
-    id: number;
-    codeTypeId: number;
-    nameAr: string;
-    nameEn: string;
-    descriptionAr: string;
-    descriptionEn: string;
-    codeGenerated: string;
-    status: string;
-    externalSystem: string;
-    externalReferenceId: string;
-    createdBy: string;
-    createdAt: string;
-    approvedAt: string | null;
-    approvedBy: string | null;
-}
+import { CodeGenerationService, CodeItem } from '../../core/services/code-generation.service';
 
 @Component({
     selector: 'app-codes-list',
@@ -39,6 +22,7 @@ export class CodesListComponent implements OnInit {
     filterRequest = {
         nameEn: '',
         nameAr: '',
+        status: '',
         externalSystem: ''
     };
 
@@ -74,18 +58,20 @@ export class CodesListComponent implements OnInit {
     applyFilter(): void {
         const nameEn = this.filterRequest.nameEn.toLowerCase().trim();
         const nameAr = this.filterRequest.nameAr.trim();
+        const status = this.filterRequest.status.toLowerCase().trim();
         const extSystem = this.filterRequest.externalSystem.toLowerCase().trim();
 
         this.filteredCodes = this.codes.filter(item => {
             const matchesNameEn = nameEn ? item.nameEn.toLowerCase().includes(nameEn) : true;
             const matchesNameAr = nameAr ? item.nameAr.includes(nameAr) : true;
+            const matchesStatus = status ? item.status.toLowerCase().includes(status) : true;
             const matchesExtSystem = extSystem ? item.externalSystem.toLowerCase().includes(extSystem) : true;
-            return matchesNameEn && matchesNameAr && matchesExtSystem;
+            return matchesNameEn && matchesNameAr && matchesStatus && matchesExtSystem;
         });
     }
 
     resetFilter(): void {
-        this.filterRequest = { nameEn: '', nameAr: '', externalSystem: '' };
+        this.filterRequest = { nameEn: '', nameAr: '', status: '', externalSystem: '' };
         this.filteredCodes = [...this.codes];
     }
 
@@ -93,7 +79,15 @@ export class CodesListComponent implements OnInit {
         this.router.navigate(['/code-generation']);
     }
 
-
+    getStatusClass(status: string): string {
+        switch (status?.toUpperCase()) {
+            case 'DRAFT': return 'badge-draft';
+            case 'APPROVED': return 'badge-approved';
+            case 'REJECTED': return 'badge-rejected';
+            case 'CANCELLED': return 'badge-cancelled';
+            default: return 'badge-default';
+        }
+    }
 
     formatDate(dateStr: string | null): string {
         if (!dateStr) return '—';

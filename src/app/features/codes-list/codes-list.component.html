@@ -42,7 +42,7 @@
                     <div class="filter-field">
                         <label for="codes-filter-name-ar">Name (Ar)</label>
                         <input id="codes-filter-name-ar" type="text" class="form-control"
-                            [(ngModel)]="filterRequest.nameAr" placeholder="بحث بالاسم العربي" dir="rtl" />
+                            [(ngModel)]="filterRequest.nameAr" placeholder="بحث بالاسم العربي" />
                     </div>
 
                     <div class="filter-field">
@@ -81,11 +81,10 @@
                     <tr>
                         <th class="col-num">#</th>
                         <th>Generated Code</th>
+                        <th>Code Type</th>
                         <th>Name (En)</th>
                         <th>Name (Ar)</th>
                         <th>External System</th>
-                        <th>Ref. ID</th>
-
                         <th>Created By</th>
                         <th>Created Date</th>
                         <th class="col-actions">Actions</th>
@@ -103,11 +102,14 @@
                         <td>
                             <span class="generated-code-badge">{{ item.codeGenerated }}</span>
                         </td>
+                        <td>
+                            <span class="code-type-badge" title="{{ item.codeTypeNameEn }}">
+                                {{ item.codeTypeCode }}
+                            </span>
+                        </td>
                         <td class="name-en">{{ item.nameEn }}</td>
-                        <td class="name-ar" dir="rtl">{{ item.nameAr }}</td>
+                        <td class="name-ar">{{ item.nameAr }}</td>
                         <td><span class="ext-badge">{{ item.externalSystem || '—' }}</span></td>
-                        <td class="ref-col">{{ item.externalReferenceId || '—' }}</td>
-
                         <td>{{ item.createdBy || '—' }}</td>
                         <td>{{ formatDate(item.createdAt) }}</td>
                         <td class="actions-cell">

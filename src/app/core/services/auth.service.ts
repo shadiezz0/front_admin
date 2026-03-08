@@ -10,14 +10,14 @@ interface ValidateTokenResponse {
     success: boolean;
     message: string;
     data: {
-        token: string;          
+        token: string;
         userCode: string;
         employeeName: string;
         empFullNameEn?: string;
         roles: string[];
         permissions: string[];
         expiresOn: string;
-        genderId?: number;      
+        genderId?: number;
     };
 }
 
@@ -235,9 +235,14 @@ export class AuthService {
         return this.currentUser()?.roles || [];
     }
 
-    /**
-     * Handle successful login
-     */
+
+    getDisplayName(): string {
+        const user = this.currentUser();
+        if (!user) return '';
+        return user.employeeName || user.userCode || '';
+    }
+
+    
     private handleLoginSuccess(data: any): void {
         // Store token
         safeLocalStorageSetItem(STORAGE_KEYS.TOKEN, data.token);

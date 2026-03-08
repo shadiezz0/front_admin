@@ -2,47 +2,47 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CodeTypeService, CodeTypeItem } from '../../core/services/code-type.service';
+import { CodeAttributeDetailService, CodeAttributeDetailItem } from '../../core/services/code-attribute-detail.service';
 
 @Component({
-    selector: 'app-code-type-list',
+    selector: 'app-code-details-list',
     standalone: true,
     imports: [CommonModule, FormsModule],
-    templateUrl: './code-type-list.component.html',
-    styleUrl: './code-type-list.component.css'
+    templateUrl: './code-details-list.component.html',
+    styleUrl: './code-details-list.component.css'
 })
-export class CodeTypeListComponent implements OnInit {
-    codeTypes: CodeTypeItem[] = [];
-    filteredCodeTypes: CodeTypeItem[] = [];
+export class CodeDetailsListComponent implements OnInit {
+    codeDetails: CodeAttributeDetailItem[] = [];
+    filteredCodeDetails: CodeAttributeDetailItem[] = [];
     isLoading = false;
     errorMessage = '';
 
     showFilter = false;
-    filterRequest = { nameEn: '', nameAr: '' };
+    filterRequest = { nameEn: '', nameAr: '', code: '' };
 
     constructor(
-        private codeTypeService: CodeTypeService,
+        private codeDetailService: CodeAttributeDetailService,
         private router: Router
     ) { }
 
     ngOnInit(): void {
-        this.loadCodeTypes();
+        this.loadCodeDetails();
     }
 
     // ── Load ──────────────────────────────────────────────────────────────────
 
-    loadCodeTypes(): void {
+    loadCodeDetails(): void {
         this.isLoading = true;
         this.errorMessage = '';
-        this.codeTypeService.getAllCodeTypes().subscribe({
+        this.codeDetailService.getAllCodeAttributeDetails().subscribe({
             next: (response) => {
                 this.isLoading = false;
-                this.codeTypes = response.data;
-                this.filteredCodeTypes = [...this.codeTypes];
+                this.codeDetails = response.data;
+                this.filteredCodeDetails = [...this.codeDetails];
             },
             error: (err) => {
                 this.isLoading = false;
-                this.errorMessage = err.error?.message || 'Failed to load code types.';
+                this.errorMessage = err.error?.message || 'Failed to load code details.';
             }
         });
     }
@@ -54,26 +54,29 @@ export class CodeTypeListComponent implements OnInit {
     applyFilter(): void {
         const nameEn = this.filterRequest.nameEn.toLowerCase().trim();
         const nameAr = this.filterRequest.nameAr.trim();
-        this.filteredCodeTypes = this.codeTypes.filter(item => {
-            const matchesNameEn = nameEn ? item.nameEn.toLowerCase().includes(nameEn) : true;
-            const matchesNameAr = nameAr ? item.nameAr.includes(nameAr) : true;
-            return matchesNameEn && matchesNameAr;
+        const code = this.filterRequest.code.toLowerCase().trim();
+
+        this.filteredCodeDetails = this.codeDetails.filter(item => {
+            const matchesNameEn = nameEn ? item.nameEn?.toLowerCase().includes(nameEn) : true;
+            const matchesNameAr = nameAr ? item.nameAr?.includes(nameAr) : true;
+            const matchesCode = code ? item.code?.toLowerCase().includes(code) : true;
+            return matchesNameEn && matchesNameAr && matchesCode;
         });
     }
 
     resetFilter(): void {
-        this.filterRequest = { nameEn: '', nameAr: '' };
-        this.filteredCodeTypes = [...this.codeTypes];
+        this.filterRequest = { nameEn: '', nameAr: '', code: '' };
+        this.filteredCodeDetails = [...this.codeDetails];
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
 
     navigateToAdd(): void {
-        this.router.navigate(['/code-type']);
+        this.router.navigate(['/code-details']);
     }
 
-    navigateToEdit(item: CodeTypeItem): void {
-        this.router.navigate(['/update-code-type', item.id]);
+    navigateToEdit(item: CodeAttributeDetailItem): void {
+        this.router.navigate(['/update-code-detail', item.id]);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

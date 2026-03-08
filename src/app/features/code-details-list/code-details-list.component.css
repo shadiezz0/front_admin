@@ -1,8 +1,8 @@
 /* =============================================
-   Codes List — Premium Design
+   Code Details List — Premium Design
    ============================================= */
 
-.codes-list-container {
+.code-details-list-container {
     padding: 24px;
     background-color: #F9FCFB;
     min-height: calc(100vh - 64px);
@@ -151,7 +151,7 @@
 }
 
 .filter-panel--open {
-    max-height: 220px;
+    max-height: 200px;
     border-bottom-color: #e8efec;
 }
 
@@ -168,7 +168,7 @@
 
 .filter-field {
     flex: 1;
-    min-width: 130px;
+    min-width: 160px;
 }
 
 .filter-field label {
@@ -191,7 +191,6 @@
     border-radius: 6px;
     transition: border-color 0.2s, box-shadow 0.2s;
     box-sizing: border-box;
-    appearance: auto;
 }
 
 .form-control:focus {
@@ -279,6 +278,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
+    table-layout: fixed;
 }
 
 .data-table thead tr {
@@ -304,6 +304,51 @@
 .data-table thead th.col-num {
     width: 48px;
     text-align: center;
+}
+
+/* Fixed column widths to keep th and td perfectly aligned */
+.data-table thead th:nth-child(2),
+.data-table tbody td:nth-child(2) {
+    width: 120px;
+}
+
+.data-table thead th:nth-child(3),
+.data-table tbody td:nth-child(3) {
+    width: 120px;
+}
+
+.data-table thead th:nth-child(4),
+.data-table tbody td:nth-child(4) {
+    width: 90px;
+}
+
+.data-table thead th:nth-child(5),
+.data-table tbody td:nth-child(5) {
+    width: 155px;
+    /* Attribute Main ID */
+}
+
+.data-table thead th:nth-child(6),
+.data-table tbody td:nth-child(6) {
+    width: 180px;
+    /* Description */
+}
+
+.data-table thead th:nth-child(7),
+.data-table tbody td:nth-child(7) {
+    width: 110px;
+    /* Created Date */
+}
+
+.data-table thead th:nth-child(8),
+.data-table tbody td:nth-child(8) {
+    width: 90px;
+    /* Status */
+}
+
+.data-table thead th.col-actions,
+.data-table tbody td.actions-cell {
+    width: 80px;
 }
 
 .data-table tbody tr {
@@ -341,105 +386,48 @@
     color: #44CDB8 !important;
 }
 
-.ref-col {
-    font-size: 0.82rem;
+.desc-col {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: #718096 !important;
-    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
 }
 
-/* Generated Code Badge */
-.generated-code-badge {
+/* Code Badge */
+.code-badge {
     display: inline-block;
-    padding: 0.25rem 0.7rem;
-    background: linear-gradient(135deg, #e6f7f4, #d0f0ea);
-    color: #1a7a6e;
-    border-radius: 5px;
+    padding: 0.2rem 0.6rem;
+    background: #e6f7f4;
+    color: #2a9b8c;
+    border-radius: 4px;
     font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.06em;
     font-family: 'Courier New', monospace;
-    border: 1px solid #b2e4db;
-    white-space: nowrap;
 }
 
-/* External System Badge */
-.ext-badge {
-    display: inline-block;
-    padding: 0.18rem 0.55rem;
-    background: #edf2f7;
-    color: #4a5568;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-/* Code Type Badge */
-.code-type-badge {
-    display: inline-block;
-    padding: 0.2rem 0.55rem;
-    background: linear-gradient(135deg, #ebe8ff, #d9d5ff);
-    color: #553c9a;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    border: 1px solid #c4b5fd;
-    cursor: default;
-}
-
-/* Status Badges */
+/* Status Badge */
 .status-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.22rem 0.65rem;
+    min-width: 44px;
+    padding: 0.25rem 0.65rem;
     border-radius: 5px;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    text-transform: uppercase;
-}
-
-/* Legacy class names */
-.status-approved,
-.badge-approved {
-    background: #c6f6d5;
-    color: #276749;
-    border: 1px solid #9ae6b4;
+    letter-spacing: 0.04em;
 }
 
 .status-active {
-    background: #bee3f8;
-    color: #2a69ac;
-    border: 1px solid #90cdf4;
+    background: #276749;
+    color: #fff;
 }
 
-.status-draft,
-.badge-draft {
-    background: #feebc8;
-    color: #744210;
-    border: 1px solid #fbd38d;
-}
-
-.status-rejected,
-.badge-rejected {
-    background: #fed7d7;
-    color: #c53030;
-    border: 1px solid #fc8181;
-}
-
-.badge-cancelled {
-    background: #e2e8f0;
-    color: #4a5568;
-    border: 1px solid #cbd5e0;
-}
-
-.badge-default {
-    background: #edf2f7;
-    color: #718096;
-    border: 1px solid #e2e8f0;
+.status-inactive {
+    background: #c53030;
+    color: #fff;
 }
 
 /* No Data */
@@ -450,7 +438,7 @@
     font-size: 0.9rem;
 }
 
-/* --- Action Buttons --- */
+/* --- Action Buttons in Table --- */
 .actions-cell {
     text-align: center;
     white-space: nowrap;
@@ -480,19 +468,12 @@
     box-shadow: 0 3px 8px rgba(68, 205, 184, 0.4);
 }
 
-.action-btn--delete {
-    background: #e53e3e;
-    color: #fff;
-}
-
-.action-btn--delete:hover {
-    background: #c53030;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(229, 62, 62, 0.4);
-}
-
 /* --- Responsive --- */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
+    .code-details-list-container {
+        padding: 16px;
+    }
+
     .filter-row {
         flex-direction: column;
     }
@@ -504,15 +485,5 @@
     .filter-actions {
         width: 100%;
         justify-content: flex-end;
-    }
-
-    .card-top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .codes-list-container {
-        padding: 16px;
     }
 }

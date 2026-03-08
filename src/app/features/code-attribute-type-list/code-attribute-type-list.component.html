@@ -42,7 +42,7 @@
                     <div class="filter-field">
                         <label for="attr-filter-name-ar">Name (Ar)</label>
                         <input id="attr-filter-name-ar" type="text" class="form-control"
-                            [(ngModel)]="filterRequest.nameAr" placeholder="بحث بالاسم العربي" dir="rtl" />
+                            [(ngModel)]="filterRequest.nameAr" placeholder="بحث بالاسم العربي" />
                     </div>
                     <div class="filter-actions">
                         <button class="btn btn-apply-filter" (click)="applyFilter()"
@@ -93,9 +93,9 @@
                     <tr class="table-row">
                         <td class="col-num">{{ i + 1 }}</td>
                         <td class="name-en">{{ item.nameEn }}</td>
-                        <td class="name-ar" dir="rtl">{{ item.nameAr }}</td>
+                        <td class="name-ar">{{ item.nameAr }}</td>
                         <td class="desc-col">{{ item.descriptionEn || '—' }}</td>
-                        <td class="desc-col" dir="rtl">{{ item.descriptionAr || '—' }}</td>
+                        <td class="desc-col">{{ item.descriptionAr || '—' }}</td>
                         <td>{{ item.createdBy || '—' }}</td>
                         <td>{{ formatDate(item.createdAt) }}</td>
                         <td class="actions-cell">

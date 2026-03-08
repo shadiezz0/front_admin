@@ -279,6 +279,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
+    table-layout: fixed;
 }
 
 .data-table thead tr {
@@ -304,6 +305,42 @@
 .data-table thead th.col-num {
     width: 48px;
     text-align: center;
+}
+
+/* Fixed column widths to keep th and td perfectly aligned */
+.data-table thead th:nth-child(2),
+.data-table tbody td:nth-child(2) {
+    width: 130px;
+}
+
+.data-table thead th:nth-child(3),
+.data-table tbody td:nth-child(3) {
+    width: 130px;
+}
+
+.data-table thead th:nth-child(4),
+.data-table tbody td:nth-child(4) {
+    width: 160px;
+}
+
+.data-table thead th:nth-child(5),
+.data-table tbody td:nth-child(5) {
+    width: 160px;
+}
+
+.data-table thead th:nth-child(6),
+.data-table tbody td:nth-child(6) {
+    width: 110px;
+}
+
+.data-table thead th:nth-child(7),
+.data-table tbody td:nth-child(7) {
+    width: 110px;
+}
+
+.data-table thead th.col-actions,
+.data-table tbody td.actions-cell {
+    width: 90px;
 }
 
 .data-table tbody tr {
@@ -339,11 +376,9 @@
 .name-ar {
     font-weight: 500;
     color: #44CDB8 !important;
-    direction: rtl;
 }
 
 .desc-col {
-    max-width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

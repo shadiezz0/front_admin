@@ -61,7 +61,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="sortOrderInput" class="form-label">Sort Order</label>
                             <input id="sortOrderInput" type="number" class="form-control" [(ngModel)]="sortOrder"
-                                min="1" />
+                                min="1" [disabled]="true" />
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Required</label>
@@ -80,9 +80,9 @@
                         <button type="button" class="btn btn-primary-save" [disabled]="isSaving" (click)="onSave()">
                             @if (isSaving) {
                             <span class="spinner-border spinner-border-sm me-1"></span>
-                            Adding...
+                            Saving...
                             } @else {
-                            Add Setting
+                            Add Setting & Continue
                             }
                         </button>
                     </div>
@@ -94,7 +94,8 @@
             <div class="card custom-card attributes-list-card mt-4" *ngIf="savedSettings.length > 0">
                 <div class="card-body">
                     <h3 class="card-title">Added Settings ({{ savedSettings.length }})</h3>
-                    <p class="card-description">Review your settings before continuing to sequence</p>
+                    <p class="card-description">Settings are saved immediately. Click <strong>Continue to
+                            Sequence</strong> when you're ready.</p>
 
                     <div class="attributes-items-container">
                         @for (s of savedSettings; track $index) {
@@ -134,7 +135,7 @@
 
                     <div class="d-flex justify-content-center mt-5">
                         <button type="button" class="btn btn-primary-save btn-lg px-5" (click)="continueToSequence()">
-                            Save All Settings & Continue
+                            Continue to Sequence &rarr;
                         </button>
                     </div>
                 </div>

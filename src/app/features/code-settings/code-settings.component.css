@@ -4,7 +4,7 @@
     min-height: calc(100vh - 64px);
 }
 
-/* Page Header & Breadcrumbs */
+/* ── Page Header & Breadcrumbs ─────────────────────────── */
 .page-header {
     display: flex;
     align-items: center;
@@ -48,7 +48,7 @@
     color: #8898aa;
 }
 
-/* Custom Card */
+/* ── Card ─────────────────────────────────────────────── */
 .custom-card {
     position: relative;
     display: flex;
@@ -68,7 +68,20 @@
     padding: 1.5rem;
 }
 
-/* Form Styling */
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+}
+
+.card-description {
+    color: #8898aa;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Form ─────────────────────────────────────────────── */
 .form-label {
     font-size: 0.875rem;
     font-weight: 500;
@@ -103,6 +116,16 @@
     border-color: #f5365c;
 }
 
+.invalid-feedback,
+.error-text {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #f5365c;
+}
+
+/* Toggle Switch */
 .form-check-input:checked {
     background-color: #44CDB8;
     border-color: #44CDB8;
@@ -118,21 +141,12 @@
     color: #f5365c !important;
 }
 
-/* Grid helper */
+/* ── Grid ─────────────────────────────────────────────── */
 .row {
     display: flex;
     flex-wrap: wrap;
     margin-right: -15px;
     margin-left: -15px;
-}
-
-.col-md-6 {
-    position: relative;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    flex: 0 0 50%;
-    max-width: 50%;
 }
 
 .col-md-4 {
@@ -142,6 +156,15 @@
     padding-left: 15px;
     flex: 0 0 33.333333%;
     max-width: 33.333333%;
+}
+
+.col-md-6 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    flex: 0 0 50%;
+    max-width: 50%;
 }
 
 .col-md-12 {
@@ -161,6 +184,10 @@
     margin-top: 0.5rem !important;
 }
 
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
 .mt-4 {
     margin-top: 1.5rem !important;
 }
@@ -173,8 +200,17 @@
     margin-right: 0.25rem !important;
 }
 
+.me-2 {
+    margin-right: 0.5rem !important;
+}
+
 .ms-2 {
     margin-left: 0.5rem !important;
+}
+
+.px-5 {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
 }
 
 .d-flex {
@@ -189,7 +225,7 @@
     justify-content: center !important;
 }
 
-/* Buttons */
+/* ── Buttons ──────────────────────────────────────────── */
 .btn {
     display: inline-block;
     font-weight: 600;
@@ -205,6 +241,12 @@
     line-height: 1.5;
     border-radius: 0.25rem;
     transition: all .15s ease;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.3rem;
 }
 
 .btn-primary-save {
@@ -235,13 +277,34 @@
     transform: translateY(-1px);
 }
 
+.btn-outline-list {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem .9rem;
+    font-size: .82rem;
+    font-weight: 600;
+    color: #44CDB8;
+    border: 1.5px solid #44CDB8;
+    border-radius: .25rem;
+    background: transparent;
+    text-decoration: none;
+    transition: all .15s ease;
+}
+
+.btn-outline-list:hover {
+    background: #44CDB8;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
 .btn:disabled {
     opacity: 0.65;
     cursor: not-allowed;
     transform: none !important;
 }
 
-/* Attributes List Styles */
+/* ── Review Card (Pending List) ───────────────────────── */
 .attributes-list-card {
     margin-top: 2rem;
 }
@@ -256,7 +319,8 @@
 }
 
 .attribute-item:hover {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    border-color: #d1d5db;
 }
 
 .attribute-header {
@@ -286,6 +350,7 @@
     flex-wrap: wrap;
     margin-right: -10px;
     margin-left: -10px;
+    gap: 0.5rem 0;
 }
 
 .detail-item {
@@ -302,6 +367,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .detail-item span {
@@ -311,22 +377,15 @@
     background: #f8f9fe;
     border-radius: 0.25rem;
     border: 1px solid #dee2e6;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    min-height: 2.25rem;
 }
 
-.card-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1a202c;
-    margin-bottom: 0.5rem;
-}
-
-.card-description {
-    color: #8898aa;
-    font-size: 0.875rem;
-    margin-bottom: 1.5rem;
-}
-
-/* Skeleton */
+/* ── Skeleton Loader ──────────────────────────────────── */
 .skeleton-wrap {
     padding: 10px 0;
 }
@@ -361,10 +420,17 @@
     }
 }
 
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 768px) {
 
-    .col-md-6,
     .col-md-4,
+    .col-md-6,
     .detail-item {
         flex: 0 0 100%;
         max-width: 100%;
@@ -374,5 +440,9 @@
         flex-direction: column;
         gap: 0.75rem;
         align-items: flex-start;
+    }
+
+    .btn-lg {
+        width: 100%;
     }
 }

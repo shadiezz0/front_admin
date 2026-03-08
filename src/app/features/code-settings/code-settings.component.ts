@@ -31,6 +31,7 @@ export class CodeSettingsComponent implements OnInit {
     codeTypes: any[] = [];
     codeAttributeDetails: CodeAttributeDetailItem[] = [];
     isLoadingData = true;
+    private _loadTarget = 2;
 
     // Selections
     selectedCodeTypeId: number | null = null;
@@ -60,43 +61,38 @@ export class CodeSettingsComponent implements OnInit {
 
     loadDropdownData(): void {
         this.isLoadingData = true;
+        this._loadCount = 0;
+
+        // Safety fallback — dismiss skeleton after 10 s even if APIs hang
+        const timeout = setTimeout(() => { this.isLoadingData = false; }, 10000);
 
         this.codeTypeService.getAllCodeTypes().subscribe({
-            next: (res) => { this.codeTypes = res.data; this.checkLoadDone(); },
-            error: () => { this.checkLoadDone(); }
+            next: (res) => { this.codeTypes = res.data ?? []; this.checkLoadDone(timeout); },
+            error: () => { this.checkLoadDone(timeout); }
         });
 
         this.codeAttributeDetailService.getAllCodeAttributeDetails().subscribe({
-            next: (res) => { this.codeAttributeDetails = res.data; this.checkLoadDone(); },
-            error: () => { this.checkLoadDone(); }
+            next: (res) => { this.codeAttributeDetails = res.data ?? []; this.checkLoadDone(timeout); },
+            error: () => { this.checkLoadDone(timeout); }
         });
     }
 
     private _loadCount = 0;
-    private checkLoadDone(): void {
+    private checkLoadDone(timeout?: ReturnType<typeof setTimeout>): void {
         this._loadCount++;
-        if (this._loadCount >= 2) this.isLoadingData = false;
+        if (this._loadCount >= this._loadTarget) {
+            this.isLoadingData = false;
+            if (timeout) clearTimeout(timeout);
+        }
     }
 
-    // Called for manual save
+    // Called when 'Add Setting & Continue' is clicked
     onSave(): void {
         if (!this.selectedCodeTypeId || !this.selectedAttributeDetailId) {
-            this.errorMessage = 'Please select both Code Type and Attribute Detail.';
-            setTimeout(() => this.errorMessage = '', 3000);
+            this.errorMessage = 'Please select both Code Type and Attribute Detail before continuing.';
+            setTimeout(() => this.errorMessage = '', 4000);
             return;
         }
-
-        // Duplicate guard
-        const dup = this.savedSettings.some(
-            s => s.codeTypeLabel === this.getCodeTypeLabel(+this.selectedCodeTypeId!) &&
-                s.detailLabel === this.getDetailLabel(+this.selectedAttributeDetailId!)
-        );
-        if (dup) {
-            this.errorMessage = 'This Code Type + Detail combination was already saved.';
-            setTimeout(() => this.errorMessage = '', 3000);
-            return;
-        }
-
         this.saveSettingNow();
     }
 
@@ -133,7 +129,10 @@ export class CodeSettingsComponent implements OnInit {
                 this.selectedCodeTypeId = null;
                 this.selectedAttributeDetailId = null;
 
-                setTimeout(() => this.successMessage = '', 3000);
+                // Automatically navigate to the next step (Sequence) after successful save
+                setTimeout(() => {
+                    this.router.navigate(['/code-sequence']);
+                }, 1000);
             },
             error: (err) => {
                 this.isSaving = false;
@@ -141,7 +140,10 @@ export class CodeSettingsComponent implements OnInit {
                     this.successMessage = 'Setting already exists.';
                     this.selectedCodeTypeId = null;
                     this.selectedAttributeDetailId = null;
-                    setTimeout(() => this.successMessage = '', 3000);
+                    // Still navigate — the setting exists so we can proceed
+                    setTimeout(() => {
+                        this.router.navigate(['/code-sequence']);
+                    }, 1000);
                 } else {
                     this.errorMessage = err.error?.message || 'Failed to save setting.';
                 }
@@ -150,10 +152,6 @@ export class CodeSettingsComponent implements OnInit {
     }
 
     continueToSequence(): void {
-        if (this.savedSettings.length === 0) {
-            this.errorMessage = 'Save at least one setting before continuing.';
-            return;
-        }
         this.router.navigate(['/code-sequence']);
     }
 

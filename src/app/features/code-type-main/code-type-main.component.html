@@ -59,7 +59,7 @@
                                     [class.is-invalid]="codeAttributeTypeId?.invalid && codeAttributeTypeId?.touched">
                                     <option value="">— Select —</option>
                                     @for (at of codeAttributeTypes; track at.id) {
-                                    <option [value]="at.id">{{ at.nameEn }}</option>
+                                    <option [value]="at.id">{{ at.nameEn || at.nameAr }}</option>
                                     }
                                 </select>
                             </div>
@@ -85,7 +85,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="mainNameAr" class="form-label">Name (Ar)</label>
                                 <input id="mainNameAr" type="text" class="form-control" formControlName="nameAr"
-                                    placeholder="الاسم بالعربية" dir="rtl" />
+                                    placeholder="الاسم بالعربية" />
                             </div>
                         </div>
 
@@ -117,22 +117,26 @@
                             <div class="attribute-details">
                                 <div class="detail-row">
                                     <div class="detail-item">
-                                        <strong>Code Type</strong>
+                                        <strong>Type</strong>
                                         <span>{{ item.codeTypeLabel }}</span>
                                     </div>
                                     <div class="detail-item">
-                                        <strong>Attribute Type</strong>
+                                        <strong>Attr</strong>
                                         <span>{{ item.attrTypeLabel }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Sort</strong>
+                                        <span>{{ item.code }}</span>
                                     </div>
                                 </div>
                                 <div class="detail-row mt-3">
                                     <div class="detail-item">
-                                        <strong>Name (English)</strong>
+                                        <strong>Name (EN)</strong>
                                         <span>{{ item.nameEn }}</span>
                                     </div>
                                     <div class="detail-item">
-                                        <strong>Name (Arabic)</strong>
-                                        <span dir="rtl">{{ item.nameAr }}</span>
+                                        <strong>Name (AR)</strong>
+                                        <span>{{ item.nameAr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +151,7 @@
                             <span class="spinner-border spinner-border-sm me-1"></span>
                             Saving All...
                             } @else {
-                            Save All & Continue to Details
+                            Save All Entries & Continue
                             }
                         </button>
                     </div>

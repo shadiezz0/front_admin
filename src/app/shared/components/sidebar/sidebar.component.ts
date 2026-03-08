@@ -61,8 +61,9 @@ export class SidebarComponent {
                 {
                     label: 'Code Detail',
                     icon: 'file',
-                    expanded: false,
+                    expanded: true,
                     children: [
+                        { label: 'All Code Details', icon: '', route: '/all-code-details' },
                         { label: 'Create New', icon: '', route: '/code-details' }
                     ]
                 },
