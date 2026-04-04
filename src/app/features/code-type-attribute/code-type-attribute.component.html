@@ -1,129 +1,126 @@
-<div class="code-type-attribute-container panel-container">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div>
-            <h2 class="main-content-title tx-24 mg-b-5">Code Type Attribute</h2>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Code Type Attribute</li>
-            </ol>
-        </div>
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <h2 class="main-content-title tx-24 mg-b-5">Code Type Attribute</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Code Type Attribute</li>
+        </ol>
     </div>
+</div>
 
-    <div class="content row row-sm">
-        <div class="col-lg-12 col-md-12">
-            <!-- Add New Attribute Card -->
-            <div class="card custom-card">
-                <div class="card-body">
-                    <h3 class="card-title">Add New Attribute</h3>
-                    <p class="card-description">Enter attribute details and click "Add Attribute" to add it to the list
-                        ({{ attributes.length }} currently added)</p>
+<div class="row row-sm">
+    <div class="col-lg-12 col-md-12">
+        <!-- Add New Attribute Card -->
+        <div class="card custom-card">
+            <div class="card-body">
+                <h3 class="card-title mb-1">Add New Attribute</h3>
+                <p class="text-muted mb-4">Enter attribute details and click "Add Attribute" to add it to the list
+                    ({{ attributes.length }} currently added)</p>
 
-                    <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
-                    <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
+                @if (successMessage) {
+                <div class="alert alert-success">{{ successMessage }}</div>
+                }
+                @if (errorMessage) {
+                <div class="alert alert-danger">{{ errorMessage }}</div>
+                }
 
-                    <form [formGroup]="attributeForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
-                        <div class="row">
-                            <!-- Name Arabic -->
-                            <div class="col-md-6 mb-3">
-                                <label for="nameAr" class="form-label">Name (Arabic)</label>
-                                <input id="nameAr" type="text" class="form-control" formControlName="nameAr"
-                                    placeholder="الاسم بالعربية" />
-                            </div>
-
-                            <!-- Name English -->
-                            <div class="col-md-6 mb-3">
-                                <label for="nameEn" class="form-label">Name (English) <span
-                                        class="text-danger">*</span></label>
-                                <input id="nameEn" type="text" class="form-control" formControlName="nameEn"
-                                    placeholder="English Name"
-                                    [class.is-invalid]="nameEn?.invalid && nameEn?.touched" />
-                                <div class="error-text" *ngIf="nameEn?.invalid && nameEn?.touched">
-                                    English name is required
-                                </div>
+                <form [formGroup]="attributeForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                    <div class="row">
+                        <!-- Name English -->
+                        <div class="col-md-6 mb-3">
+                            <label for="nameEn" class="form-label">Name (English) <span class="text-danger">*</span></label>
+                            <input id="nameEn" type="text" class="form-control" formControlName="nameEn"
+                                placeholder="English Name" [class.is-invalid]="nameEn?.invalid && nameEn?.touched" />
+                            <div class="invalid-feedback" *ngIf="nameEn?.invalid && nameEn?.touched">
+                                English name is required
                             </div>
                         </div>
 
-                        <div class="row">
-                            <!-- Description Arabic -->
-                            <div class="col-md-6 mb-3">
-                                <label for="descriptionAr" class="form-label">Description (Arabic)</label>
-                                <textarea id="descriptionAr" class="form-control" formControlName="descriptionAr"
-                                    placeholder="الوصف بالعربية" rows="3"></textarea>
-                            </div>
-
-                            <!-- Description English -->
-                            <div class="col-md-6 mb-3">
-                                <label for="descriptionEn" class="form-label">Description (English)</label>
-                                <textarea id="descriptionEn" class="form-control" formControlName="descriptionEn"
-                                    placeholder="English Description" rows="3"></textarea>
-                            </div>
+                        <!-- Name Arabic -->
+                        <div class="col-md-6 mb-3">
+                            <label for="nameAr" class="form-label">Name (Arabic)</label>
+                            <input id="nameAr" type="text" class="form-control" formControlName="nameAr"
+                                placeholder="الاسم بالعربية" />
                         </div>
-
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary-save" [disabled]="isLoading">
-                                Add Attribute
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Added Attributes List Card -->
-            <div class="card custom-card attributes-list-card" *ngIf="attributes.length > 0">
-                <div class="card-body">
-                    <h3 class="card-title">Added Attributes ({{ attributes.length }})</h3>
-                    <p class="card-description">Review your attributes before saving</p>
-
-                    <div class="attributes-items-container">
-                        @for (attribute of attributes; track $index) {
-                        <div class="attribute-item">
-                            <div class="attribute-header">
-                                <h4>Attribute #{{ $index + 1 }}</h4>
-                                <button type="button" class="btn btn-danger-delete" (click)="removeAttribute($index)"
-                                    [disabled]="isLoading">
-                                    <i class="fa fa-trash me-1"></i> Remove
-                                </button>
-                            </div>
-                            <div class="attribute-details">
-                                <div class="detail-row">
-                                    <div class="detail-item">
-                                        <strong>Name (Arabic)</strong>
-                                        <span>{{ attribute.nameAr }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Name (English)</strong>
-                                        <span>{{ attribute.nameEn }}</span>
-                                    </div>
-                                </div>
-                                <div class="detail-row mt-3">
-                                    <div class="detail-item">
-                                        <strong>Description (Arabic)</strong>
-                                        <span>{{ attribute.descriptionAr }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Description (English)</strong>
-                                        <span>{{ attribute.descriptionEn }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        }
                     </div>
 
-                    <div class="d-flex justify-content-center mt-4">
-                        <button type="button" class="btn btn-primary-save btn-lg px-5" (click)="saveAllAttributes()"
-                            [disabled]="isLoading">
-                            @if (isLoading) {
-                            <span class="spinner-border spinner-border-sm me-1"></span>
-                            Saving All Attributes...
-                            } @else {
-                            Save All Attributes & Continue
-                            }
+                    <div class="row">
+                        <!-- Description English -->
+                        <div class="col-md-12 mb-3">
+                            <label for="descriptionEn" class="form-label">Description (English)</label>
+                            <textarea id="descriptionEn" class="form-control" formControlName="descriptionEn"
+                                placeholder="English Description" rows="3"></textarea>
+                        </div>
+
+                        <!-- Description Arabic -->
+                        <div class="col-md-12 mb-3">
+                            <label for="descriptionAr" class="form-label">Description (Arabic)</label>
+                            <textarea id="descriptionAr" class="form-control" formControlName="descriptionAr"
+                                placeholder="الوصف بالعربية" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-secondary" [disabled]="isLoading">
+                            Add Attribute
                         </button>
                     </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Added Attributes List Card -->
+        @if (attributes.length > 0) {
+        <div class="card custom-card mt-4">
+            <div class="card-body">
+                <h3 class="card-title mb-1">Added Attributes ({{ attributes.length }})</h3>
+                <p class="text-muted mb-4">Review your attributes before saving</p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table text-nowrap border-bottom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name (English)</th>
+                                <th>Name (Arabic)</th>
+                                <th>Description (En)</th>
+                                <th>Description (Ar)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (attribute of attributes; track $index) {
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ attribute.nameEn }}</td>
+                                <td>{{ attribute.nameAr }}</td>
+                                <td>{{ attribute.descriptionEn }}</td>
+                                <td>{{ attribute.descriptionAr }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removeAttribute($index)" [disabled]="isLoading">
+                                        <i class="fe fe-trash-2"></i> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="button" class="btn btn-primary btn-lg px-5" (click)="saveAllAttributes()" [disabled]="isLoading">
+                        @if (isLoading) {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                        Saving All Attributes...
+                        } @else {
+                        Save All Attributes & Continue
+                        }
+                    </button>
                 </div>
             </div>
         </div>
+        }
     </div>
 </div>

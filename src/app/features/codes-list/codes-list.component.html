@@ -1,85 +1,77 @@
-<div class="codes-list-container">
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h2 class="main-content-title tx-24 mg-b-5">Generated Codes</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Codes List</li>
+    </ol>
+  </div>
+</div>
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <div>
-            <h2 class="main-content-title">Generated Codes</h2>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Codes List</li>
-            </ol>
-        </div>
-    </div>
-
-    <!-- Card -->
+<div class="row row-sm">
+  <div class="col-lg-12 col-md-12">
     <div class="card custom-card">
-
-        <!-- Card Top Bar -->
-        <div class="card-top-bar">
-            <div class="section-label">
-                <span class="label-bar"></span>
-                <span class="label-text">GENERATED CODES LIST</span>
+      <div class="card-body">
+        
+        <!-- Actions & Filter Toggle -->
+        <div class="d-flex justify-content-between mb-3 align-items-center">
+            <div>
+              <button class="btn btn-outline-primary" (click)="toggleFilter()">
+                  <i class="fe fe-filter"></i> Filter
+              </button>
             </div>
-            <div class="top-actions">
-                <button class="btn btn-filter" (click)="toggleFilter()" id="codes-filter-btn">
-                    <i class="filter-icon">⚙</i> Filter
-                </button>
-                <button class="btn btn-add" (click)="navigateToAdd()" id="add-code-btn">
-                    + Generate
-                </button>
+            <div>
+              <button class="btn btn-primary" (click)="navigateToAdd()">
+                  + Generate
+              </button>
             </div>
         </div>
 
         <!-- Filter Panel -->
-        <div class="filter-panel" [class.filter-panel--open]="showFilter">
-            <div class="filter-panel-inner">
-                <div class="filter-row">
-                    <div class="filter-field">
-                        <label for="codes-filter-name-en">Name (En)</label>
-                        <input id="codes-filter-name-en" type="text" class="form-control"
-                            [(ngModel)]="filterRequest.nameEn" placeholder="Search by English name" />
-                    </div>
-                    <div class="filter-field">
-                        <label for="codes-filter-name-ar">Name (Ar)</label>
-                        <input id="codes-filter-name-ar" type="text" class="form-control"
-                            [(ngModel)]="filterRequest.nameAr" placeholder="بحث بالاسم العربي" />
-                    </div>
-
-                    <div class="filter-field">
-                        <label for="codes-filter-ext-system">External System</label>
-                        <input id="codes-filter-ext-system" type="text" class="form-control"
-                            [(ngModel)]="filterRequest.externalSystem" placeholder="e.g. HMS" />
-                    </div>
-                    <div class="filter-actions">
-                        <button class="btn btn-apply-filter" (click)="applyFilter()"
-                            id="codes-apply-filter-btn">Apply</button>
-                        <button class="btn btn-reset-filter" (click)="resetFilter()"
-                            id="codes-reset-filter-btn">Reset</button>
-                    </div>
-                </div>
-            </div>
+        @if (showFilter) {
+        <div class="row mb-4 p-3 bg-light rounded" style="border: 1px solid #ededf5;">
+             <div class="col-md-3 mb-3 mb-md-0">
+                 <label for="codes-filter-name-en" class="form-label">Name (En)</label>
+                 <input id="codes-filter-name-en" type="text" class="form-control" [(ngModel)]="filterRequest.nameEn" placeholder="Search by English name" />
+             </div>
+             <div class="col-md-3 mb-3 mb-md-0">
+                 <label for="codes-filter-name-ar" class="form-label">Name (Ar)</label>
+                 <input id="codes-filter-name-ar" type="text" class="form-control" [(ngModel)]="filterRequest.nameAr" placeholder="بحث بالاسم العربي" />
+             </div>
+             <div class="col-md-4 mb-3 mb-md-0">
+                 <label for="codes-filter-ext-system" class="form-label">External System</label>
+                 <input id="codes-filter-ext-system" type="text" class="form-control" [(ngModel)]="filterRequest.externalSystem" placeholder="e.g. HMS" />
+             </div>
+             <div class="col-md-2 d-flex align-items-end">
+                 <button class="btn btn-primary me-2" (click)="applyFilter()" style="padding: 6px 12px;">Apply</button>
+                 <button class="btn btn-secondary" (click)="resetFilter()" style="padding: 6px 12px;">Reset</button>
+             </div>
         </div>
+        }
 
         <!-- Error -->
         @if (errorMessage) {
-        <div class="alert-error">{{ errorMessage }}</div>
+        <div class="alert alert-danger">{{ errorMessage }}</div>
         }
 
         <!-- Loading -->
         @if (isLoading) {
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <span>Loading generated codes...</span>
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2 text-muted">Loading generated codes...</div>
         </div>
         }
 
         <!-- Table -->
         @if (!isLoading) {
-        <div class="table-wrapper">
-            <table class="data-table">
+        <div class="table-responsive">
+            <table class="table text-nowrap">
                 <thead>
                     <tr>
-                        <th class="col-num">#</th>
+                        <th style="width: 50px">#</th>
                         <th>Generated Code</th>
                         <th>Code Type</th>
                         <th>Name (En)</th>
@@ -87,51 +79,37 @@
                         <th>External System</th>
                         <th>Created By</th>
                         <th>Created Date</th>
-                        <th class="col-actions">Actions</th>
+                        <th class="text-center" style="width: 100px">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (filteredCodes.length === 0) {
                     <tr>
-                        <td colspan="9" class="no-data">No generated codes found.</td>
+                        <td colspan="9" class="no-data">No data found</td>
                     </tr>
                     }
                     @for (item of filteredCodes; track item.id; let i = $index) {
-                    <tr class="table-row">
-                        <td class="col-num">{{ i + 1 }}</td>
+                    <tr>
+                        <td>{{ i + 1 }}</td>
                         <td>
-                            <span class="generated-code-badge">{{ item.codeGenerated }}</span>
+                            <span class="badge bg-light text-dark border">{{ item.codeGenerated }}</span>
                         </td>
                         <td>
-                            <span class="code-type-badge" title="{{ item.codeTypeNameEn }}">
+                            <span class="badge bg-secondary" title="{{ item.codeTypeNameEn }}">
                                 {{ item.codeTypeCode }}
                             </span>
                         </td>
-                        <td class="name-en">{{ item.nameEn }}</td>
-                        <td class="name-ar">{{ item.nameAr }}</td>
-                        <td><span class="ext-badge">{{ item.externalSystem || '—' }}</span></td>
+                        <td>{{ item.nameEn }}</td>
+                        <td>{{ item.nameAr }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ item.externalSystem || '—' }}</span></td>
                         <td>{{ item.createdBy || '—' }}</td>
                         <td>{{ formatDate(item.createdAt) }}</td>
-                        <td class="actions-cell">
-                            <button class="action-btn action-btn--edit" title="Edit" [id]="'edit-code-btn-' + item.id">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                </svg>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary border-0 me-1" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                             </button>
-                            <button class="action-btn action-btn--delete" title="Delete"
-                                [id]="'delete-code-btn-' + item.id">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6" />
-                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                    <path d="M10 11v6" />
-                                    <path d="M14 11v6" />
-                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                                </svg>
+                            <button class="btn btn-sm btn-outline-danger border-0" title="Delete">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>
                             </button>
                         </td>
                     </tr>
@@ -140,6 +118,7 @@
             </table>
         </div>
         }
-
+      </div>
     </div>
+  </div>
 </div>

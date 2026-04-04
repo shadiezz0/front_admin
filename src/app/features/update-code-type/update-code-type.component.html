@@ -1,193 +1,105 @@
-<div class="update-ct-container">
-
-    <!-- Page Header -->
-    <div class="page-header">
-        <div>
-            <h2 class="main-content-title">Update Code Type</h2>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
-                <li class="breadcrumb-item">
-                    <a (click)="onCancel()" style="cursor:pointer">Code Type List</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Edit</li>
-            </ol>
-        </div>
-    </div>
-
-    <!-- Loading skeleton -->
-    @if (isLoadingData) {
-    <div class="card custom-card">
-        <div class="card-body">
-            <div class="skeleton-wrap">
-                <div class="skeleton-icon"></div>
-                <div class="skeleton-lines">
-                    <div class="skeleton-line sk-wide"></div>
-                    <div class="skeleton-line sk-narrow"></div>
-                </div>
-            </div>
-            <div class="skeleton-form">
-                <div class="skeleton-field"></div>
-                <div class="skeleton-field"></div>
-                <div class="skeleton-field sk-full"></div>
-                <div class="skeleton-field sk-full"></div>
-            </div>
-        </div>
-    </div>
-    }
-
-    <!-- Load error -->
-    @if (!isLoadingData && loadError) {
-    <div class="card custom-card">
-        <div class="card-body">
-            <div class="state-error">
-                <div class="state-icon error-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <div>
-                    <p class="state-title">Failed to load</p>
-                    <p class="state-sub">{{ loadError }}</p>
-                </div>
-                <button class="btn btn-secondary-cancel" (click)="onCancel()">← Back to List</button>
-            </div>
-        </div>
-    </div>
-    }
-
-    <!-- Edit Form -->
-    @if (!isLoadingData && !loadError && codeTypeItem) {
-    <div class="card custom-card">
-
-        <!-- Card header band -->
-        <div class="card-header-band">
-            <div class="band-info">
-                <div class="band-code-wrap">
-                    <span class="band-label">Code Type</span>
-                    <span class="band-code">{{ codeTypeItem.codeTypeCode }}</span>
-                </div>
-                <div class="band-meta">
-                    <span class="band-meta-item">
-                        <span class="meta-dot active-dot" [class.inactive-dot]="!codeTypeItem.isActive"></span>
-                        {{ codeTypeItem.isActive ? 'Active' : 'Inactive' }}
-                    </span>
-                    <span class="band-sep">·</span>
-                    <span class="band-meta-item">Created {{ codeTypeItem.createdAt | date:'mediumDate' }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="card-body">
-
-            <!-- Save success -->
-            @if (saveSuccess) {
-            <div class="alert-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                {{ saveSuccess }} — Redirecting…
-            </div>
-            }
-
-            <!-- Save error -->
-            @if (saveError) {
-            <div class="alert-error">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                {{ saveError }}
-            </div>
-            }
-
-            <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" novalidate>
-
-                <div class="section-title">Basic Information</div>
-
-                <!-- Name row -->
-                <div class="form-row-2">
-                    <!-- Name En -->
-                    <div class="form-group">
-                        <label for="nameEn" class="form-label">
-                            Name (English) <span class="required">*</span>
-                        </label>
-                        <input id="nameEn" type="text" class="form-control" formControlName="nameEn"
-                            placeholder="Enter English name" [class.is-invalid]="nameEn?.invalid && nameEn?.touched" />
-                        @if (nameEn?.invalid && nameEn?.touched) {
-                        <div class="invalid-feedback">English name is required.</div>
-                        }
-                    </div>
-
-                    <!-- Name Ar -->
-                    <div class="form-group">
-                        <label for="nameAr" class="form-label">Name (Arabic)</label>
-                        <input id="nameAr" type="text" class="form-control" formControlName="nameAr"
-                            placeholder="أدخل الاسم بالعربي" />
-                    </div>
-                </div>
-
-                <div class="section-title">Descriptions</div>
-
-                <!-- Description En -->
-                <div class="form-group mb-3">
-                    <label for="descriptionEn" class="form-label">Description (English)</label>
-                    <textarea id="descriptionEn" class="form-control" formControlName="descriptionEn"
-                        placeholder="Enter English description" rows="3"></textarea>
-                </div>
-
-                <!-- Description Ar -->
-                <div class="form-group mb-3">
-                    <label for="descriptionAr" class="form-label">Description (Arabic)</label>
-                    <textarea id="descriptionAr" class="form-control" formControlName="descriptionAr"
-                        placeholder="أدخل الوصف بالعربي" rows="3"></textarea>
-                </div>
-
-                <div class="section-title">Status</div>
-
-                <!-- Is Active toggle -->
-                <div class="toggle-row">
-                    <span class="toggle-label">Active Status</span>
-                    <label class="toggle-switch" for="isActiveToggle">
-                        <input id="isActiveToggle" type="checkbox" formControlName="isActive" />
-                        <span class="toggle-track">
-                            <span class="toggle-thumb"></span>
-                        </span>
-                        <span class="toggle-text" [class.toggle-text--on]="isActive?.value">
-                            {{ isActive?.value ? 'Active' : 'Inactive' }}
-                        </span>
-                    </label>
-                </div>
-
-                <!-- Actions -->
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary-cancel" (click)="onCancel()" id="cancel-update-btn">
-                        ← Cancel
-                    </button>
-                    <button type="submit" class="btn btn-primary-save" [disabled]="isSaving || saveSuccess"
-                        id="save-update-btn">
-                        @if (isSaving) {
-                        <span class="btn-spinner"></span> Saving…
-                        } @else {
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                            <polyline points="7 3 7 8 15 8"></polyline>
-                        </svg>
-                        Save Changes
-                        }
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    </div>
-    }
-
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h2 class="main-content-title tx-24 mg-b-5">Update Code Type</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:void(0)" (click)="onCancel()">Settings</a></li>
+      <li class="breadcrumb-item"><a href="javascript:void(0)" (click)="onCancel()">Code Type List</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+  </div>
 </div>
+
+<!-- Loading skeleton -->
+@if (isLoadingData) {
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Load error -->
+@if (!isLoadingData && loadError) {
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="text-danger">
+      Failed to load: {{ loadError }}
+    </div>
+    <button class="btn btn-secondary mt-3" (click)="onCancel()">← Back to List</button>
+  </div>
+</div>
+}
+
+<!-- Edit Form -->
+@if (!isLoadingData && !loadError && codeTypeItem) {
+<div class="row row-sm">
+  <div class="col-lg-12 col-md-12">
+    <div class="card custom-card">
+      <div class="card-body">
+        
+        @if (saveSuccess) {
+        <div class="alert alert-success">
+          {{ saveSuccess }} — Redirecting…
+        </div>
+        }
+        @if (saveError) {
+        <div class="alert alert-danger">
+          {{ saveError }}
+        </div>
+        }
+
+        <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+          <div class="row">
+            <!-- Name En -->
+            <div class="col-md-6 mb-3">
+              <label for="nameEn" class="form-label">Name (English) <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nameEn" formControlName="nameEn" required>
+              @if (nameEn?.invalid && nameEn?.touched) {
+              <div class="text-danger mt-1" style="font-size: 13px;">English name is required.</div>
+              }
+            </div>
+
+            <!-- Name Ar -->
+            <div class="col-md-6 mb-3">
+              <label for="nameAr" class="form-label">Name (Arabic)</label>
+              <input type="text" class="form-control" id="nameAr" formControlName="nameAr">
+            </div>
+
+            <!-- Description En -->
+            <div class="col-md-6 mb-3">
+              <label for="descriptionEn" class="form-label">Description (English)</label>
+              <textarea class="form-control" id="descriptionEn" formControlName="descriptionEn" rows="3"></textarea>
+            </div>
+
+            <!-- Description Ar -->
+            <div class="col-md-6 mb-3">
+              <label for="descriptionAr" class="form-label">Description (Arabic)</label>
+              <textarea class="form-control" id="descriptionAr" formControlName="descriptionAr" rows="3"></textarea>
+            </div>
+
+            <!-- Is Active -->
+            <div class="col-md-6 mb-3">
+              <label for="isActiveToggle" class="form-label">Active Status</label>
+              <select class="form-select" id="isActiveToggle" formControlName="isActive">
+                <option [ngValue]="true">Active</option>
+                <option [ngValue]="false">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn btn-secondary me-2" (click)="onCancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSaving || saveSuccess">
+               @if (isSaving) { Saving… } @else { Save }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

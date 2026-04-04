@@ -1,6 +1,6 @@
-<div class="code-type-main-container panel-container">
-    <!-- Page Header -->
-    <div class="page-header">
+<!-- Page Header -->
+<div class="page-header">
+    <div class="d-flex justify-content-between w-100 align-items-center">
         <div>
             <h2 class="main-content-title tx-24 mg-b-5">Code Main Entry</h2>
             <ol class="breadcrumb">
@@ -8,155 +8,140 @@
                 <li class="breadcrumb-item active" aria-current="page">Main Entry</li>
             </ol>
         </div>
-        <a routerLink="/all-main-entries" class="btn btn-outline-list">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" />
-                <line x1="3" y1="12" x2="3.01" y2="12" />
-                <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
+        <a routerLink="/all-main-entries" class="btn btn-outline-primary">
             All Main Entries
         </a>
     </div>
+</div>
 
-    <div class="content row row-sm">
-        <div class="col-lg-12 col-md-12">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <h3 class="card-title">Add New Main Entry</h3>
-                    <p class="card-description">Enter details and add to your session list ({{ pendingMains.length }}
-                        added)</p>
+<div class="row row-sm">
+    <div class="col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <h3 class="card-title mb-1">Add New Main Entry</h3>
+                <p class="text-muted mb-4">Enter details and add to your session list ({{ pendingMains.length }} added)</p>
 
-                    <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
-                    <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
+                @if (successMessage) {
+                <div class="alert alert-success">{{ successMessage }}</div>
+                }
+                @if (errorMessage) {
+                <div class="alert alert-danger">{{ errorMessage }}</div>
+                }
 
-                    @if (isLoadingData) {
-                    <div class="skeleton-wrap">
-                        <div class="skeleton-field"></div>
-                    </div>
-                    } @else {
-                    <form [formGroup]="mainForm" (ngSubmit)="onAddEntry()" class="needs-validation" novalidate>
-                        <!-- Selection -->
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="mainCodeTypeId" class="form-label">Code Type <span
-                                        class="text-danger">*</span></label>
-                                <select id="mainCodeTypeId" class="form-control" formControlName="codeTypeId"
-                                    [class.is-invalid]="codeTypeId?.invalid && codeTypeId?.touched">
-                                    <option value="">— Select —</option>
-                                    @for (ct of codeTypes; track ct.id) {
-                                    <option [value]="ct.id">{{ ct.codeTypeCode }} — {{ ct.nameEn }}</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="mainAttrTypeId" class="form-label">Attribute Type <span
-                                        class="text-danger">*</span></label>
-                                <select id="mainAttrTypeId" class="form-control" formControlName="codeAttributeTypeId"
-                                    [class.is-invalid]="codeAttributeTypeId?.invalid && codeAttributeTypeId?.touched">
-                                    <option value="">— Select —</option>
-                                    @for (at of codeAttributeTypes; track at.id) {
-                                    <option [value]="at.id">{{ at.nameEn || at.nameAr }}</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Basic -->
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="mainCode" class="form-label">Code <span class="text-danger">*</span></label>
-                                <input id="mainCode" type="text" class="form-control" formControlName="code"
-                                    placeholder="e.g. CARD" [class.is-invalid]="code?.invalid && code?.touched" />
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="mainNameEn" class="form-label">Name (En) <span
-                                        class="text-danger">*</span></label>
-                                <input id="mainNameEn" type="text" class="form-control" formControlName="nameEn"
-                                    placeholder="English Name"
-                                    [class.is-invalid]="nameEn?.invalid && nameEn?.touched" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="mainNameAr" class="form-label">Name (Ar)</label>
-                                <input id="mainNameAr" type="text" class="form-control" formControlName="nameAr"
-                                    placeholder="الاسم بالعربية" />
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary-save">
-                                Add Entry
-                            </button>
-                        </div>
-                    </form>
-                    }
+                @if (isLoadingData) {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
                 </div>
-            </div>
-
-            <!-- Pending List -->
-            <div class="card custom-card attributes-list-card mt-4" *ngIf="pendingMains.length > 0">
-                <div class="card-body">
-                    <h3 class="card-title">Added Main Entries ({{ pendingMains.length }})</h3>
-                    <p class="card-description">Review before saving to database</p>
-
-                    <div class="attributes-items-container">
-                        @for (item of pendingMains; track $index) {
-                        <div class="attribute-item">
-                            <div class="attribute-header">
-                                <h4>Entry #{{ $index + 1 }} - {{ item.code }}</h4>
-                                <button type="button" class="btn btn-danger-delete" (click)="removePending($index)">
-                                    <i class="fa fa-trash me-1"></i> Remove
-                                </button>
-                            </div>
-                            <div class="attribute-details">
-                                <div class="detail-row">
-                                    <div class="detail-item">
-                                        <strong>Type</strong>
-                                        <span>{{ item.codeTypeLabel }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Attr</strong>
-                                        <span>{{ item.attrTypeLabel }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Sort</strong>
-                                        <span>{{ item.code }}</span>
-                                    </div>
-                                </div>
-                                <div class="detail-row mt-3">
-                                    <div class="detail-item">
-                                        <strong>Name (EN)</strong>
-                                        <span>{{ item.nameEn }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Name (AR)</strong>
-                                        <span>{{ item.nameAr }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                } @else {
+                <form [formGroup]="mainForm" (ngSubmit)="onAddEntry()" class="needs-validation" novalidate>
+                    <!-- Selection -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="mainCodeTypeId" class="form-label">Code Type <span class="text-danger">*</span></label>
+                            <select id="mainCodeTypeId" class="form-control form-select" formControlName="codeTypeId"
+                                [class.is-invalid]="codeTypeId?.invalid && codeTypeId?.touched">
+                                <option value="">— Select —</option>
+                                @for (ct of codeTypes; track ct.id) {
+                                <option [value]="ct.id">{{ ct.nameEn }} ({{ ct.codeTypeCode }})</option>
+                                }
+                            </select>
                         </div>
-                        }
+                        <div class="col-md-6 mb-3">
+                            <label for="mainAttrTypeId" class="form-label">Attribute Type <span class="text-danger">*</span></label>
+                            <select id="mainAttrTypeId" class="form-control form-select" formControlName="codeAttributeTypeId"
+                                [class.is-invalid]="codeAttributeTypeId?.invalid && codeAttributeTypeId?.touched">
+                                <option value="">— Select —</option>
+                                @for (at of codeAttributeTypes; track at.id) {
+                                <option [value]="at.id">{{ at.nameEn || at.nameAr }}</option>
+                                }
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="d-flex justify-content-center mt-5">
-                        <button type="button" class="btn btn-primary-save btn-lg px-5" (click)="saveAllAndContinue()"
-                            [disabled]="isSaving">
-                            @if (isSaving) {
-                            <span class="spinner-border spinner-border-sm me-1"></span>
-                            Saving All...
-                            } @else {
-                            Save All Entries & Continue
-                            }
+                    <!-- Basic -->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="mainCode" class="form-label">Code <span class="text-danger">*</span></label>
+                            <input id="mainCode" type="text" class="form-control" formControlName="code"
+                                placeholder="e.g. CARD" [class.is-invalid]="code?.invalid && code?.touched" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="mainNameEn" class="form-label">Name (En) <span class="text-danger">*</span></label>
+                            <input id="mainNameEn" type="text" class="form-control" formControlName="nameEn"
+                                placeholder="English Name" [class.is-invalid]="nameEn?.invalid && nameEn?.touched" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="mainNameAr" class="form-label">Name (Ar)</label>
+                            <input id="mainNameAr" type="text" class="form-control" formControlName="nameAr"
+                                placeholder="الاسم بالعربية" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-secondary">
+                            Add Entry
                         </button>
                     </div>
+                </form>
+                }
+            </div>
+        </div>
+
+        <!-- Pending List -->
+        @if (pendingMains.length > 0) {
+        <div class="card custom-card mt-4">
+            <div class="card-body">
+                <h3 class="card-title mb-1">Added Main Entries ({{ pendingMains.length }})</h3>
+                <p class="text-muted mb-4">Review before saving to database</p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table text-nowrap border-bottom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Attr</th>
+                                <th>Sort / Code</th>
+                                <th>Name (EN)</th>
+                                <th>Name (AR)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of pendingMains; track $index) {
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ item.codeTypeLabel }}</td>
+                                <td>{{ item.attrTypeLabel }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ item.code }}</span></td>
+                                <td>{{ item.nameEn }}</td>
+                                <td>{{ item.nameAr }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removePending($index)">
+                                        <i class="fe fe-trash-2"></i> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="button" class="btn btn-primary btn-lg px-5" (click)="saveAllAndContinue()" [disabled]="isSaving">
+                        @if (isSaving) {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                        Saving All...
+                        } @else {
+                        Save All Entries & Continue
+                        }
+                    </button>
                 </div>
             </div>
         </div>
+        }
     </div>
 </div>

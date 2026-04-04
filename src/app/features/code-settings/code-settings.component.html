@@ -1,6 +1,6 @@
-<div class="code-settings-container panel-container">
-    <!-- Page Header -->
-    <div class="page-header">
+<!-- Page Header -->
+<div class="page-header">
+    <div class="d-flex justify-content-between w-100 align-items-center">
         <div>
             <h2 class="main-content-title tx-24 mg-b-5">Code Type Settings</h2>
             <ol class="breadcrumb">
@@ -9,137 +9,134 @@
             </ol>
         </div>
     </div>
+</div>
 
-    <div class="content row row-sm">
-        <div class="col-lg-12 col-md-12">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <h3 class="card-title">Add New Setting</h3>
-                    <p class="card-description">Configure how the code will be generated for the selected type</p>
+<div class="row row-sm">
+    <div class="col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <h3 class="card-title mb-1">Add New Setting</h3>
+                <p class="text-muted mb-4">Configure how the code will be generated for the selected type</p>
 
-                    <app-alert *ngIf="successMessage" type="success" [message]="successMessage"></app-alert>
-                    <app-alert *ngIf="errorMessage" type="error" [message]="errorMessage"></app-alert>
+                @if (successMessage) {
+                <div class="alert alert-success">{{ successMessage }}</div>
+                }
+                @if (errorMessage) {
+                <div class="alert alert-danger">{{ errorMessage }}</div>
+                }
 
-                    @if (isLoadingData) {
-                    <div class="skeleton-wrap">
-                        <div class="skeleton-field"></div>
-                        <div class="skeleton-field"></div>
-                    </div>
-                    } @else {
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="selCodeType" class="form-label">Code Type <span
-                                    class="text-danger">*</span></label>
-                            <select id="selCodeType" class="form-control" [(ngModel)]="selectedCodeTypeId"
-                                [disabled]="isSaving">
-                                <option [ngValue]="null" disabled>— Select code type —</option>
-                                @for (ct of codeTypes; track ct.id) {
-                                <option [value]="ct.id">{{ ct.codeTypeCode }} — {{ ct.nameEn }}</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="selDetail" class="form-label">Attribute Detail <span
-                                    class="text-danger">*</span></label>
-                            <select id="selDetail" class="form-control" [(ngModel)]="selectedAttributeDetailId"
-                                [disabled]="isSaving">
-                                <option [ngValue]="null" disabled>— Select detail —</option>
-                                @for (d of codeAttributeDetails; track d.id) {
-                                <option [value]="d.id">{{ d.code }} — {{ d.nameEn }}</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="separatorInput" class="form-label">Separator</label>
-                            <input id="separatorInput" type="text" class="form-control" [(ngModel)]="separator"
-                                placeholder="e.g. -" maxlength="5" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="sortOrderInput" class="form-label">Sort Order</label>
-                            <input id="sortOrderInput" type="number" class="form-control" [(ngModel)]="sortOrder"
-                                min="1" [disabled]="true" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Required</label>
-                            <div class="form-check form-switch mt-2">
-                                <input class="form-check-input" type="checkbox" id="isRequiredToggle"
-                                    [(ngModel)]="isRequired">
-                                <label class="form-check-label ms-2" for="isRequiredToggle">
-                                    {{ isRequired ? 'Yes' : 'No' }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="button" class="btn btn-primary-save" [disabled]="isSaving" (click)="onSave()">
-                            @if (isSaving) {
-                            <span class="spinner-border spinner-border-sm me-1"></span>
-                            Saving...
-                            } @else {
-                            Add Setting & Continue
-                            }
-                        </button>
-                    </div>
-                    }
+                @if (isLoadingData) {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
                 </div>
-            </div>
+                } @else {
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="selCodeType" class="form-label">Code Type <span class="text-danger">*</span></label>
+                        <select id="selCodeType" class="form-control form-select" [(ngModel)]="selectedCodeTypeId"
+                            [disabled]="isSaving">
+                            <option [ngValue]="null" disabled>— Select code type —</option>
+                            @for (ct of codeTypes; track ct.id) {
+                            <option [value]="ct.id">{{ ct.nameEn }} ({{ ct.codeTypeCode }})</option>
+                            }
+                        </select>
+                    </div>
 
-            <!-- Saved Settings Entry List -->
-            <div class="card custom-card attributes-list-card mt-4" *ngIf="savedSettings.length > 0">
-                <div class="card-body">
-                    <h3 class="card-title">Added Settings ({{ savedSettings.length }})</h3>
-                    <p class="card-description">Settings are saved immediately. Click <strong>Continue to
-                            Sequence</strong> when you're ready.</p>
+                    <div class="col-md-6 mb-3">
+                        <label for="selDetail" class="form-label">Attribute Detail <span class="text-danger">*</span></label>
+                        <select id="selDetail" class="form-control form-select" [(ngModel)]="selectedAttributeDetailId"
+                            [disabled]="isSaving">
+                            <option [ngValue]="null" disabled>— Select detail —</option>
+                            @for (d of codeAttributeDetails; track d.id) {
+                            <option [value]="d.id">{{ d.nameEn }} ({{ d.code }})</option>
+                            }
+                        </select>
+                    </div>
+                </div>
 
-                    <div class="attributes-items-container">
-                        @for (s of savedSettings; track $index) {
-                        <div class="attribute-item">
-                            <div class="attribute-header">
-                                <h4>Setting #{{ $index + 1 }}</h4>
-                                <button type="button" class="btn btn-danger-delete"
-                                    (click)="removeSavedSetting($index)">
-                                    <i class="fa fa-trash me-1"></i> Remove
-                                </button>
-                            </div>
-                            <div class="attribute-details">
-                                <div class="detail-row">
-                                    <div class="detail-item">
-                                        <strong>Code Type</strong>
-                                        <span>{{ s.codeTypeLabel }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Attribute Detail</strong>
-                                        <span>{{ s.detailLabel }}</span>
-                                    </div>
-                                </div>
-                                <div class="detail-row mt-3">
-                                    <div class="detail-item">
-                                        <strong>Separator</strong>
-                                        <span>{{ s.separator }}</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <strong>Required</strong>
-                                        <span>{{ s.isRequired ? 'Yes' : 'No' }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="separatorInput" class="form-label">Separator</label>
+                        <input id="separatorInput" type="text" class="form-control" [(ngModel)]="separator"
+                            placeholder="e.g. -" maxlength="5" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="sortOrderInput" class="form-label">Sort Order</label>
+                        <input id="sortOrderInput" type="number" class="form-control" [(ngModel)]="sortOrder"
+                            min="1" [disabled]="true" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Required</label>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" id="isRequiredToggle"
+                                [(ngModel)]="isRequired">
+                            <label class="form-check-label ms-2" for="isRequiredToggle">
+                                {{ isRequired ? 'Yes' : 'No' }}
+                            </label>
                         </div>
-                        }
                     </div>
+                </div>
 
-                    <div class="d-flex justify-content-center mt-5">
-                        <button type="button" class="btn btn-primary-save btn-lg px-5" (click)="continueToSequence()">
-                            Continue to Sequence &rarr;
-                        </button>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="button" class="btn btn-secondary" [disabled]="isSaving" (click)="onSave()">
+                        Add Setting & Continue
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Saved Settings Entry List -->
+        @if (savedSettings.length > 0) {
+        <div class="card custom-card mt-4">
+            <div class="card-body">
+                <h3 class="card-title mb-1">Added Settings ({{ savedSettings.length }})</h3>
+                <p class="text-muted mb-4">Settings are saved immediately. Click <strong>Continue to
+                        Sequence</strong> when you're ready.</p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table text-nowrap border-bottom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code Type</th>
+                                <th>Attribute Detail</th>
+                                <th>Separator</th>
+                                <th>Required</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (s of savedSettings; track $index) {
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ s.codeTypeLabel }}</td>
+                                <td>{{ s.detailLabel }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ s.separator || 'None' }}</span></td>
+                                <td>
+                                    <span class="badge" [class.bg-success]="s.isRequired" [class.bg-secondary]="!s.isRequired">
+                                        {{ s.isRequired ? 'Yes' : 'No' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removeSavedSetting($index)">
+                                        <i class="fe fe-trash-2"></i> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="button" class="btn btn-primary btn-lg px-5" (click)="continueToSequence()">
+                        Continue to Sequence &rarr;
+                    </button>
                 </div>
             </div>
         </div>
+        }
     </div>
 </div>
