@@ -14,9 +14,6 @@
         <!-- Add New Attribute Card -->
         <div class="card custom-card">
             <div class="card-body">
-                <h3 class="card-title mb-1">Add New Attribute</h3>
-                <p class="text-muted mb-4">Enter attribute details and click "Add Attribute" to add it to the list
-                    ({{ attributes.length }} currently added)</p>
 
                 @if (successMessage) {
                 <div class="alert alert-success">{{ successMessage }}</div>
@@ -110,7 +107,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-4">
-                    <button type="button" class="btn btn-primary btn-lg px-5" (click)="saveAllAttributes()" [disabled]="isLoading">
+                    <button type="button" class="btn btn-custom-green btn-lg px-5" (click)="saveAllAttributes()" [disabled]="isLoading">
                         @if (isLoading) {
                         <span class="spinner-border spinner-border-sm me-1"></span>
                         Saving All Attributes...

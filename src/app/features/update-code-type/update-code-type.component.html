@@ -92,8 +92,8 @@
 
           <!-- Action Buttons -->
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" class="btn btn-secondary me-2" (click)="onCancel()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isSaving || saveSuccess">
+            <button type="button" class="btn btn-custom-red me-2" (click)="onCancel()">Cancel</button>
+            <button type="submit" class="btn btn-custom-green" [disabled]="isSaving || saveSuccess">
                @if (isSaving) { Saving… } @else { Save }
             </button>
           </div>

@@ -52,8 +52,8 @@
         }
 
         <div class="mb-4">
-            <span class="badge bg-primary fs-14 mb-2">{{ mainItem.code }}</span>
-            <p class="text-muted mb-0" style="font-size: 13px;">Created {{ mainItem.createdAt | date:'mediumDate' }}</p>
+          <span class="badge bg-primary fs-14 mb-2">{{ mainItem.code }}</span>
+          <p class="text-muted mb-0" style="font-size: 13px;">Created {{ mainItem.createdAt | date:'mediumDate' }}</p>
         </div>
 
         <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
@@ -97,9 +97,9 @@
 
           <!-- Action Buttons -->
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" class="btn btn-secondary me-2" (click)="onCancel()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isSaving || saveSuccess">
-               @if (isSaving) { Saving… } @else { Save Changes }
+            <button type="button" class="btn btn-custom-red me-2" (click)="onCancel()">Cancel</button>
+            <button type="submit" class="btn btn-custom-green" [disabled]="isSaving || saveSuccess">
+              @if (isSaving) { Saving… } @else { Save Changes }
             </button>
           </div>
         </form>

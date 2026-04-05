@@ -15,8 +15,6 @@
     <div class="col-lg-12 col-md-12">
         <div class="card custom-card">
             <div class="card-body">
-                <h3 class="card-title mb-1">Add Sequence</h3>
-                <p class="text-muted mb-4">Define the sequence range and cycling for the selected code type</p>
 
                 @if (successMessage) {
                 <div class="alert alert-success">{{ successMessage }}</div>
@@ -84,7 +82,7 @@
 
                     <!-- Submit -->
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-primary px-5" [disabled]="isSaving">
+                        <button type="submit" class="btn btn-custom-green px-5" [disabled]="isSaving">
                             @if (isSaving) {
                             <span class="spinner-border spinner-border-sm me-1"></span>
                             Saving...

@@ -134,10 +134,11 @@ body {
 
 /* Form Labels */
 .form-label {
-  color: #8c90a4 !important;
-  font-size: 13px !important;
+  color: #4d5875 !important;
+  font-size: 13.5px !important;
   font-weight: 500 !important;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0.4rem !important;
+  display: block;
 }
 
 /* Asterisk mark color */
@@ -145,20 +146,48 @@ body {
   color: #f74f75 !important;
 }
 
-/* Base Input styling */
-.form-control, .form-select, .ng-select.ng-select-single .ng-select-container {
-  border: 1px solid #ededf5 !important;
+/* Modern Input styling */
+.form-control, 
+.form-select, 
+.ng-select.ng-select-single .ng-select-container {
+  height: 42px !important;
+  padding: 0.5rem 0.85rem !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  color: #4d5875 !important;
   background-color: #fff !important;
-  color: #3b4863 !important;
-  border-radius: 4px !important;
+  background-clip: padding-box !important;
+  border: 1px solid #e9edf4 !important;
+  border-radius: 5px !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
   box-shadow: none !important;
 }
-.form-control:focus, .form-select:focus, .ng-select.ng-select-single.ng-select-focused .ng-select-container {
-  border-color: #c9cae3 !important;
-  outline: 0;
+
+/* Focus State */
+.form-control:focus, 
+.form-select:focus, 
+.ng-select.ng-select-single.ng-select-focused .ng-select-container {
+  color: #4d5875 !important;
+  background-color: #fff !important;
+  border-color: #39CAB3 !important; /* Using the new green as focus border */
+  outline: 0 !important;
+  box-shadow: 0 0 0 2px rgba(57, 202, 179, 0.1) !important;
 }
-.form-control::placeholder, .ng-select.ng-select-single .ng-select-container .ng-placeholder {
-  color: #cdd2e4 !important;
+
+/* Read-only / Disabled / Special filled state like in screenshot */
+.form-control:disabled, 
+.form-control[readonly],
+.form-control.filled {
+  background-color: #ecf2ff !important;
+  border-color: #e9edf4 !important;
+  opacity: 1 !important;
+}
+
+.form-control::placeholder, 
+.ng-select.ng-select-single .ng-select-container .ng-placeholder {
+  color: #b0bac9 !important;
+  opacity: 1;
 }
 
 /* Buttons and interactions */
@@ -184,6 +213,33 @@ body {
   background-color: #24d5b8 !important;
   color: #fff !important;
 }
+.btn-success {
+    color: #fff !important;
+    background-color: #016a59 !important;
+    border-color: #289986 !important;
+}
+.btn-success:hover {
+    background-color: #015043 !important;
+    border-color: #1c7365 !important;
+}
+.btn-custom-green {
+    color: #fff !important;
+    background-color: #39CAB3 !important;
+    border-color: #39CAB3 !important;
+}
+.btn-custom-green:hover {
+    background-color: #2fb5a0 !important;
+    border-color: #2fb5a0 !important;
+}
+.btn-custom-red {
+    color: #fff !important;
+    background-color: #F33461 !important;
+    border-color: #F33461 !important;
+}
+.btn-custom-red:hover {
+    background-color: #df2a55 !important;
+    border-color: #df2a55 !important;
+}
 .btn-secondary {
   background-color: #f3f3f8 !important;
   border-color: #f3f3f8 !important;
@@ -204,16 +260,57 @@ body {
   color: #fff !important;
 }
 
+/* Custom form-switch styles to match the modern look */
+.form-check-input {
+  border: 1px solid #e9edf4 !important;
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #39CAB3 !important;
+  border-color: #39CAB3 !important;
+}
+
+.form-switch .form-check-input {
+  height: 1.4rem !important;
+  width: 2.8rem !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23e9edf4'/%3e%3c/svg%3e") !important;
+}
+
+.form-switch .form-check-input:checked {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-label {
+    font-size: 13.5px !important;
+    color: #4d5875 !important;
+    cursor: pointer;
+}
+
 /* Override standard mb-3 inside forms for consistent CMS spacing */
 form .mb-3 {
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 1.75rem !important;
+}
+
+form .col-md-6 {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+form .row {
+    margin-left: -12px;
+    margin-right: -12px;
 }
 
 /* Card overrides */
 .custom-card {
-  border: 1px solid #ededf5 !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03) !important;
-  border-radius: 8px;
+  border: 1px solid #e9edf4 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+  border-radius: 10px;
+}
+
+.custom-card .card-body {
+    padding: 1.75rem !important;
 }
 
 /* Base table style for lists (e.g. Paid Types) */
@@ -236,3 +333,34 @@ form .mb-3 {
   color: #8c90a4;
   padding: 2rem !important;
 }
+
+/* Card Header & Title Styles for List Pages */
+.card-header {
+    background-color: #fff !important;
+    border-bottom: 1px solid #ededf5 !important;
+    padding: 1.25rem 1.75rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.card-header:first-child {
+    border-radius: 11px 11px 0 0 !important;
+}
+
+.card-title {
+    color: #2b334d !important;
+    font-weight: 600 !important;
+    margin-bottom: 0 !important;
+    font-size: 1.1rem !important;
+}
+
+.mg-b-0 {
+    margin-bottom: 0 !important;
+}
+
+.tx-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
