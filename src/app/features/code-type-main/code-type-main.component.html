@@ -38,7 +38,6 @@
                             <label for="mainCodeTypeId" class="form-label">Code Type <span class="text-danger">*</span></label>
                             <select id="mainCodeTypeId" class="form-control form-select" formControlName="codeTypeId"
                                 [class.is-invalid]="codeTypeId?.invalid && codeTypeId?.touched">
-                                <option value="">— Select —</option>
                                 @for (ct of codeTypes; track ct.id) {
                                 <option [value]="ct.id">{{ ct.nameEn }} ({{ ct.codeTypeCode }})</option>
                                 }
@@ -48,7 +47,6 @@
                             <label for="mainAttrTypeId" class="form-label">Attribute Type <span class="text-danger">*</span></label>
                             <select id="mainAttrTypeId" class="form-control form-select" formControlName="codeAttributeTypeId"
                                 [class.is-invalid]="codeAttributeTypeId?.invalid && codeAttributeTypeId?.touched">
-                                <option value="">— Select —</option>
                                 @for (at of codeAttributeTypes; track at.id) {
                                 <option [value]="at.id">{{ at.nameEn || at.nameAr }}</option>
                                 }
@@ -91,9 +89,14 @@
         <!-- Pending List -->
         @if (pendingMains.length > 0) {
         <div class="card custom-card mt-4">
+            <div class="card-header">
+                <div class="section-label">
+                    <span class="label-bar"></span>
+                    <span class="label-text">Added Main Entries ({{ pendingMains.length }})</span>
+                </div>
+            </div>
             <div class="card-body">
-                <h3 class="card-title mb-1">Added Main Entries ({{ pendingMains.length }})</h3>
-                <p class="text-muted mb-4">Review before saving to database</p>
+                <p class="text-muted mb-4 small text-uppercase">Review before saving to database</p>
 
                 <div class="table-responsive mb-4">
                     <table class="table text-nowrap border-bottom">
@@ -118,8 +121,8 @@
                                 <td>{{ item.nameEn }}</td>
                                 <td>{{ item.nameAr }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removePending($index)">
-                                        <i class="fe fe-trash-2"></i> Remove
+                                    <button class="btn-action btn-action-delete" (click)="removePending($index)" title="Remove">
+                                        <i class="fe fe-trash-2"></i>
                                     </button>
                                 </td>
                             </tr>

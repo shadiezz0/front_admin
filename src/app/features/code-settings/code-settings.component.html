@@ -33,7 +33,6 @@
                         <label for="selCodeType" class="form-label">Code Type <span class="text-danger">*</span></label>
                         <select id="selCodeType" class="form-control form-select" [(ngModel)]="selectedCodeTypeId"
                             [disabled]="isSaving">
-                            <option [ngValue]="null" disabled>— Select code type —</option>
                             @for (ct of codeTypes; track ct.id) {
                             <option [value]="ct.id">{{ ct.nameEn }} ({{ ct.codeTypeCode }})</option>
                             }
@@ -44,7 +43,6 @@
                         <label for="selDetail" class="form-label">Attribute Detail <span class="text-danger">*</span></label>
                         <select id="selDetail" class="form-control form-select" [(ngModel)]="selectedAttributeDetailId"
                             [disabled]="isSaving">
-                            <option [ngValue]="null" disabled>— Select detail —</option>
                             @for (d of codeAttributeDetails; track d.id) {
                             <option [value]="d.id">{{ d.nameEn }} ({{ d.code }})</option>
                             }
@@ -88,9 +86,14 @@
         <!-- Saved Settings Entry List -->
         @if (savedSettings.length > 0) {
         <div class="card custom-card mt-4">
+            <div class="card-header">
+                <div class="section-label">
+                    <span class="label-bar"></span>
+                    <span class="label-text">Added Settings ({{ savedSettings.length }})</span>
+                </div>
+            </div>
             <div class="card-body">
-                <h3 class="card-title mb-1">Added Settings ({{ savedSettings.length }})</h3>
-                <p class="text-muted mb-4">Settings are saved immediately. Click <strong>Continue to
+                <p class="text-muted mb-4 small">Settings are saved immediately. Click <strong>Continue to
                         Sequence</strong> when you're ready.</p>
 
                 <div class="table-responsive mb-4">
@@ -118,8 +121,8 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removeSavedSetting($index)">
-                                        <i class="fe fe-trash-2"></i> Remove
+                                    <button class="btn-action btn-action-delete" (click)="removeSavedSetting($index)" title="Remove">
+                                        <i class="fe fe-trash-2"></i>
                                     </button>
                                 </td>
                             </tr>

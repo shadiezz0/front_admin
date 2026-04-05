@@ -40,7 +40,6 @@
                                     class="text-danger">*</span></label>
                             <select id="attributeMainId" class="form-control form-select" formControlName="attributeMainId"
                                 [class.is-invalid]="attributeMainId?.invalid && attributeMainId?.touched">
-                                <option [ngValue]="null">— Select Main Entry —</option>
                                 @for (m of allMains; track m.id) {
                                 <option [value]="m.id">{{ m.nameEn }} ({{ m.code }})</option>
                                 }
@@ -86,9 +85,14 @@
         <!-- Pending List -->
         @if (pendingDetails.length > 0) {
         <div class="card custom-card mt-4">
+            <div class="card-header">
+                <div class="section-label">
+                    <span class="label-bar"></span>
+                    <span class="label-text">Added Details ({{ pendingDetails.length }})</span>
+                </div>
+            </div>
             <div class="card-body">
-                <h3 class="card-title mb-1">Added Details ({{ pendingDetails.length }})</h3>
-                <p class="text-muted mb-4">Review before saving to database</p>
+                <p class="text-muted mb-4 small text-uppercase">Review before saving to database</p>
 
                 <div class="table-responsive mb-4">
                     <table class="table text-nowrap border-bottom">
@@ -111,8 +115,8 @@
                                 <td>{{ item.nameEn }}</td>
                                 <td>{{ item.nameAr }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removePending($index)">
-                                        <i class="fe fe-trash-2"></i> Remove
+                                    <button class="btn-action btn-action-delete" (click)="removePending($index)" title="Remove">
+                                        <i class="fe fe-trash-2"></i>
                                     </button>
                                 </td>
                             </tr>

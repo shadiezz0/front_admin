@@ -8,9 +8,6 @@
                 <li class="breadcrumb-item active" aria-current="page">Generate Code</li>
             </ol>
         </div>
-        <a routerLink="/all-codes" class="btn btn-outline-primary">
-            All Generated Codes
-        </a>
     </div>
 </div>
 
@@ -37,7 +34,6 @@
                             <label for="codeTypeId" class="form-label">Code Type <span class="text-danger">*</span></label>
                             <select id="codeTypeId" class="form-control form-select" formControlName="codeTypeId"
                                 [class.is-invalid]="codeTypeId?.invalid && codeTypeId?.touched">
-                                <option [ngValue]="null" disabled>— Select code type —</option>
                                 @for (ct of codeTypes; track ct.id) {
                                 <option [value]="ct.id">{{ ct.nameEn }} ({{ ct.codeTypeCode }})</option>
                                 }

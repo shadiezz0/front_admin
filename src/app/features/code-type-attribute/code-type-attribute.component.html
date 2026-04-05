@@ -71,9 +71,14 @@
         <!-- Added Attributes List Card -->
         @if (attributes.length > 0) {
         <div class="card custom-card mt-4">
+            <div class="card-header">
+                <div class="section-label">
+                    <span class="label-bar"></span>
+                    <span class="label-text">Added Attributes ({{ attributes.length }})</span>
+                </div>
+            </div>
             <div class="card-body">
-                <h3 class="card-title mb-1">Added Attributes ({{ attributes.length }})</h3>
-                <p class="text-muted mb-4">Review your attributes before saving</p>
+                <p class="text-muted mb-4 small text-uppercase">Review your attributes before saving</p>
 
                 <div class="table-responsive mb-4">
                     <table class="table text-nowrap border-bottom">
@@ -96,8 +101,8 @@
                                 <td>{{ attribute.descriptionEn }}</td>
                                 <td>{{ attribute.descriptionAr }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="removeAttribute($index)" [disabled]="isLoading">
-                                        <i class="fe fe-trash-2"></i> Remove
+                                    <button class="btn-action btn-action-delete" (click)="removeAttribute($index)" [disabled]="isLoading" title="Remove">
+                                        <i class="fe fe-trash-2"></i>
                                     </button>
                                 </td>
                             </tr>
